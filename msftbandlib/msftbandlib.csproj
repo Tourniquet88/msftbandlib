@@ -2,6 +2,22 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>MSFTBandLib</AssemblyName>
+    <RootNamespace>MSFTBandLib</RootNamespace>
+    <ApplicationIcon />
+    <Win32Resource />
+    <Version>0.1.0</Version>
+    <Authors>James Walker</Authors>
+    <Product />
+    <Company>ilmiont</Company>
+    <Description>Microsoft Band client library.</Description>
+    <Copyright>James Walker 2019</Copyright>
+    <PackageLicenseUrl>https://github.com/ilmiont/msftbandlib/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/ilmiont/msftbandlib</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ilmiont/msftbandlib</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageTags>msband</PackageTags>
+    <PackageReleaseNotes>- MSFTBandLib initial proof-of-concept release with essential functionality for interacting with Microsoft Band devices.</PackageReleaseNotes>
   </PropertyGroup>
 
 </Project>
