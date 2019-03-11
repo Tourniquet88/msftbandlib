@@ -18,6 +18,12 @@
     <RepositoryType>Git</RepositoryType>
     <PackageTags>msband</PackageTags>
     <PackageReleaseNotes>- MSFTBandLib initial proof-of-concept release with essential functionality for interacting with Microsoft Band devices.</PackageReleaseNotes>
+    <AssemblyVersion>0.1.*</AssemblyVersion>
+    <Deterministic>false</Deterministic>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;7035</NoWarn>
   </PropertyGroup>
 
 </Project>
