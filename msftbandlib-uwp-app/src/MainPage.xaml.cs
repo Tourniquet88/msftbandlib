@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
@@ -25,28 +26,32 @@ namespace MSFTBandLibUWPApp {
 /// </summary>
 public sealed partial class MainPage : Page {
 
-	/// <summary>Device ID of currently selected device in list</summary>
-	string DevicesListSelectedId;
+	/// <summary>Device selection</summary>
+	DeviceInformation Device;
 
-	/// <summary>Band connection</summary>
+	/// <summary>Active Microsoft Band connection object</summary>
 	BandConnection<BandSocketUWP> BandConnection;
 
 
 	/// <summary>Construct the page.</summary>
 	public MainPage() {
 		this.InitializeComponent();
-		this.Devices();
 	}
 
 
-	/// <summary>Display device details.</summary>
-	private async void Devices() {
-		var dev = await DeviceInformation.FindAllAsync();
-		foreach (DeviceInformation device in dev) {
-			if (device.Name.Contains("MS Band")) {
-				this.DevicesList.Items.Add(device);
-			}
-		}
+	/// <summary>Clicked "About" button.</summary>
+	/// <param name="sender">Sender</param>
+	/// <param name="e">Routed event arguments</param>
+	private void AboutBtn_Click(object sender, RoutedEventArgs e) {
+		this.AboutDialog();
+	}
+
+
+	/// <summary>Clicked "Connect" button.</summary>
+	/// <param name="sender">Sender</param>
+	/// <param name="e">Routed event arguments</param>
+	private async void DevicesBtn_Click(object sender, RoutedEventArgs e) {
+		await this.PopulateDeviceList();
 	}
 
 
@@ -60,31 +65,7 @@ public sealed partial class MainPage : Page {
 	private void DevicesList_Select(
 		object sender, ItemClickEventArgs e) {
 
-		DeviceInformation item = e.ClickedItem as DeviceInformation;
-		this.DevicesListSelectedId = item.Id;
-	}
-
-
-	/// <summary>Clicked "Connect" button.</summary>
-	/// <param name="sender">Sender</param>
-	/// <param name="e">Routed event arguments</param>
-	private async void ConnectBtn_Click(object sender, RoutedEventArgs e) {
-		if (this.DevicesListSelectedId == null) {
-			await this.dialog("Select a device", "No device selected.");
-			return;
-		}
-		try {
-			await this.dialog("Connecting", this.DevicesListSelectedId);
-			await this.dialog("Connected!", "Connected.");
-			this.DevicesList.IsEnabled = false;
-			this.ConnectBtn.IsEnabled = false;
-		}
-		catch (Exception exception) {
-			string msg = "Message: " + exception.Message + "\n";
-			msg += "Source: " + exception.Source + "\n";
-			msg += "Stack trace:\n" + exception.StackTrace;
-			await this.dialog("Connection failed", msg);
-		}
+		this.Device = e.ClickedItem as DeviceInformation;
 	}
 
 
@@ -95,7 +76,7 @@ public sealed partial class MainPage : Page {
 	/// </summary>
 	/// <param name="mac">Band MAC address</param>
 	/// <returns>BandConnection</returns>
-	private async Task<BandConnection<BandSocketUWP>> connect(string mac) {
+	private async Task<BandConnection<BandSocketUWP>> Connect(string mac) {
 		Band b = new Band(mac);
 		BandConnection<BandSocketUWP> c = MSFTBandLibUWPMain.connection(b);
 		await c.connect();
@@ -103,16 +84,94 @@ public sealed partial class MainPage : Page {
 	}
 
 
+	/// <summary>Display device details.</summary>
+	private async Task PopulateDeviceList() {
+		bool devices = false;
+		this.DevicesBtn.IsEnabled = false;
+		this.DevicesList.IsEnabled = false;
+		this.ProgressRing.IsActive = true;
+		this.ScanDevicesHelpTxt.Visibility = Visibility.Collapsed;
+
+		var dev = await DeviceInformation.FindAllAsync();
+		this.DevicesList.Items.Clear();
+		foreach (DeviceInformation device in dev) {
+			if (device.Name.Contains("MS Band")) {
+				devices = true;
+				this.DevicesList.Items.Add(device);
+			}
+		}
+		if (!devices) {
+			this.ScanDevicesHelpTxt.Text = "No devices found.";
+			this.ScanDevicesHelpTxt.Visibility = Visibility.Visible;
+		}
+		this.DevicesBtn.IsEnabled = true;
+		this.DevicesList.IsEnabled = true;
+		this.ProgressRing.IsActive = false;
+	}
+
+
 	/// <summary>Display a dialog.</summary>
 	/// <param name="title">Title</param>
 	/// <param name="content">Content</param>
-	private async Task dialog(string title, string content) {
+	private async Task Dialog(string title, string content) {
 		ContentDialog dialog = new ContentDialog {
 			Title = title,
 			Content = content,
 			PrimaryButtonText = "OK"
 		};
 		await dialog.ShowAsync();
+	}
+
+
+	/// <summary>Display the "About" dialog.</summary>
+	private async void AboutDialog() {
+		string msg = "";
+		IDictionary<string,string> versions = this.GetVersions();
+		msg += "MSFTBandLib v" + versions["mbl"] + "\n";
+		msg += "MSFTBandLibUWP v" + versions["mbl_uwp"] + "\n";
+		msg += "MSFTBandLibUWPApp v" + versions["app"] + "\n";
+		msg += "©James Walker 2019. Licensed under the MIT License.";
+		await this.Dialog("MSFTBandLib", msg);
+	}
+
+
+	/// <summary>
+	/// Get assemblies for the application and Band 
+	///  libraries from Reflection.
+	///  
+	/// Returns a string-indexed dictionary with keys for `app`, `mbl` 
+	///  and `mbl_uwp`, containing the assemblies for the application, 
+	///  MSFTBandLib library and MSFTBandLibUWP library respectively.
+	/// </summary>
+	/// <returns>IDictionary<string,Assembly></returns>
+	private IDictionary<string,Assembly> GetAssemblies() {
+		IDictionary<string,Assembly> a = new Dictionary<string,Assembly>();
+		a["app"] = Assembly.GetExecutingAssembly();
+		a["mbl"] = Assembly.GetAssembly(
+			typeof(MSFTBandLib.MSFTBandLib)
+		);
+		a["mbl_uwp"] = Assembly.GetAssembly(
+			typeof(MSFTBandLibUWP.MSFTBandLibUWP)
+		);
+		return a;
+	}
+
+
+	/// <summary>
+	/// Get application and Band library version details.
+	/// 
+	/// Returns a string-indexed dictionary with keys for `app`, `mbl` 
+	///  and `mbl_uwp`, containing the version strings for the application, 
+	///  MSFTBandLib library and MSFTBandLibUWP library respectively.
+	/// </summary>
+	/// <returns>IDictionary<string,string></returns>
+	private IDictionary<string,string> GetVersions() {
+		IDictionary<string,string> v = new Dictionary<string,string>();
+		IDictionary<string,Assembly> a = this.GetAssemblies();
+		v["app"] = a["app"].GetName().Version.ToString();
+		v["mbl"] = a["mbl"].GetName().Version.ToString();
+		v["mbl_uwp"] = a["mbl_uwp"].GetName().Version.ToString();
+		return v;
 	}
 
 }

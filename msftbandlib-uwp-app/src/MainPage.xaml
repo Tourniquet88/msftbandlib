@@ -9,17 +9,42 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-        <ListView x:Name="DevicesList" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="320" FontWeight="Normal" IsItemClickEnabled="True" ItemClick="DevicesList_Select">
-            <ListView.ItemTemplate>
-                <DataTemplate x:Name="DevicesListTemplate" x:DataType="devices:DeviceInformation">
-                    <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="0,8,0,8">
-                        <TextBlock Text="{x:Bind Id}" Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"></TextBlock>
-                        <TextBlock Text="{x:Bind Name}" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"></TextBlock>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-        <Button x:Name="ConnectBtn" Content="Connect" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="320,0,0,0" Click="ConnectBtn_Click" />
+    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="DevicesBtn" Grid.Column="0" Content="Scan for devices" Click="DevicesBtn_Click" />
+            <Button x:Name="AboutBtn" Grid.Column="1" Content="About" Click="AboutBtn_Click" Margin="8,0,0,0" />
+        </Grid>
+
+        <ProgressRing x:Name="ProgressRing" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxWidth="180" MaxHeight="180" />
+        <TextBlock x:Name="ScanDevicesHelpTxt" Grid.Row="2" Text='Click the "Scan for devices" button to find paired Microsoft Band devices.' TextWrapping="WrapWholeWords" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <GridView x:Name="DevicesList" HorizontalAlignment="Stretch" VerticalAlignment="Center" FontWeight="Normal" IsItemClickEnabled="True" ItemClick="DevicesList_Select" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                <GridView.ItemTemplate>
+                    <DataTemplate x:Name="DevicesListTemplate" x:DataType="devices:DeviceInformation">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" Width="180" Height="180" Margin="30,30,30,30">
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ToolTipService.ToolTip="Click to connect to this device.">
+                                <TextBlock Text="{x:Bind Name}" TextAlignment="Center" TextWrapping="WrapWholeWords" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"></TextBlock>
+                                <TextBlock Text="{x:Bind Id}" TextAlignment="Center" TextWrapping="Wrap" Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"></TextBlock>
+                                <TextBlock Text="Click to connect." TextAlignment="Center" VerticalAlignment="Bottom" TextWrapping="WrapWholeWords" Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" Margin="0,30,0,0"></TextBlock>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsWrapGrid HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal"></ItemsWrapGrid>
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+            </GridView>
+        </ScrollViewer>
     </Grid>
 </Page>
