@@ -5,9 +5,12 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.Devices.Bluetooth;
+using Windows.Devices.Bluetooth.Rfcomm;
 using Windows.Devices.Enumeration;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Networking;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -27,7 +30,7 @@ namespace MSFTBandLibUWPApp {
 public sealed partial class MainPage : Page {
 
 	/// <summary>Device selection</summary>
-	DeviceInformation Device;
+	BluetoothDevice Device;
 
 	/// <summary>Active Microsoft Band connection object</summary>
 	BandConnection<BandSocketUWP> BandConnection;
@@ -36,6 +39,13 @@ public sealed partial class MainPage : Page {
 	/// <summary>Construct the page.</summary>
 	public MainPage() {
 		this.InitializeComponent();
+		this.InitializePage();
+	}
+
+
+	/// <summary>Initialise the page.</summary>
+	private async void InitializePage() {
+		await this.PopulateDeviceList();
 	}
 
 
@@ -62,10 +72,21 @@ public sealed partial class MainPage : Page {
 	/// </summary>
 	/// <param name="sender">Sender</param>
 	/// <param name="e">Item click arguments</param>
-	private void DevicesList_Select(
-		object sender, ItemClickEventArgs e) {
+	private async void DevicesList_Select(
+		object sender, TappedRoutedEventArgs e) {
 
-		this.Device = e.ClickedItem as DeviceInformation;
+		ScrollViewer i;
+		DeviceInformation DeviceInfo;
+		RfcommDeviceServicesResult services;
+		i = sender as ScrollViewer;
+		DeviceInfo = i.DataContext as DeviceInformation;
+		this.Device = await BluetoothDevice.FromIdAsync(DeviceInfo.Id);
+		services = await this.Device.GetRfcommServicesAsync();
+		string s = "Hostname: " + this.Device.HostName.ToString() + "\n";
+		foreach (RfcommDeviceService service in services.Services) {
+			s += "ServiceId: " + service.ServiceId.Uuid.ToString() + "\n";
+		}
+		await this.Dialog(this.Device.Name, s);
 	}
 
 
@@ -92,13 +113,12 @@ public sealed partial class MainPage : Page {
 		this.ProgressRing.IsActive = true;
 		this.ScanDevicesHelpTxt.Visibility = Visibility.Collapsed;
 
-		var dev = await DeviceInformation.FindAllAsync();
+		string p = BluetoothDevice.GetDeviceSelectorFromPairingState(true);
+		var dev = await DeviceInformation.FindAllAsync(p);
 		this.DevicesList.Items.Clear();
 		foreach (DeviceInformation device in dev) {
-			if (device.Name.Contains("MS Band")) {
-				devices = true;
-				this.DevicesList.Items.Add(device);
-			}
+			devices = true;
+			this.DevicesList.Items.Add(device);
 		}
 		if (!devices) {
 			this.ScanDevicesHelpTxt.Text = "No devices found.";
@@ -126,7 +146,7 @@ public sealed partial class MainPage : Page {
 	/// <summary>Display the "About" dialog.</summary>
 	private async void AboutDialog() {
 		string msg = "";
-		IDictionary<string,string> versions = this.GetVersions();
+		IDictionary<string, string> versions = this.GetVersions();
 		msg += "MSFTBandLib v" + versions["mbl"] + "\n";
 		msg += "MSFTBandLibUWP v" + versions["mbl_uwp"] + "\n";
 		msg += "MSFTBandLibUWPApp v" + versions["app"] + "\n";
@@ -144,15 +164,17 @@ public sealed partial class MainPage : Page {
 	///  MSFTBandLib library and MSFTBandLibUWP library respectively.
 	/// </summary>
 	/// <returns>IDictionary<string,Assembly></returns>
-	private IDictionary<string,Assembly> GetAssemblies() {
-		IDictionary<string,Assembly> a = new Dictionary<string,Assembly>();
-		a["app"] = Assembly.GetExecutingAssembly();
-		a["mbl"] = Assembly.GetAssembly(
+	private IDictionary<string, Assembly> GetAssemblies() {
+		IDictionary<string, Assembly> a = new Dictionary<
+			string, Assembly
+		>();
+		a["app"] = this.GetType().GetTypeInfo().Assembly;
+		a["mbl"] = (
 			typeof(MSFTBandLib.MSFTBandLib)
-		);
-		a["mbl_uwp"] = Assembly.GetAssembly(
+		).GetTypeInfo().Assembly;
+		a["mbl_uwp"] = (
 			typeof(MSFTBandLibUWP.MSFTBandLibUWP)
-		);
+		).GetTypeInfo().Assembly;
 		return a;
 	}
 
@@ -161,13 +183,16 @@ public sealed partial class MainPage : Page {
 	/// Get application and Band library version details.
 	/// 
 	/// Returns a string-indexed dictionary with keys for `app`, `mbl` 
-	///  and `mbl_uwp`, containing the version strings for the application, 
+	///  and `mbl_uwp`, containing the version strings for the app, 
 	///  MSFTBandLib library and MSFTBandLibUWP library respectively.
 	/// </summary>
 	/// <returns>IDictionary<string,string></returns>
-	private IDictionary<string,string> GetVersions() {
-		IDictionary<string,string> v = new Dictionary<string,string>();
-		IDictionary<string,Assembly> a = this.GetAssemblies();
+	private IDictionary<string, string> GetVersions() {
+		IDictionary<string, string> v = new Dictionary<string, string>();
+		IDictionary<string, Assembly> a = this.GetAssemblies();
+		v["app"] = "TODO";
+		v["mbl"] = "TODO";
+		v["mbl_uwp"] = "TODO";
 		v["app"] = a["app"].GetName().Version.ToString();
 		v["mbl"] = a["mbl"].GetName().Version.ToString();
 		v["mbl_uwp"] = a["mbl_uwp"].GetName().Version.ToString();
