@@ -10,54 +10,43 @@ namespace MSFTBandLib {
 public class BandConnection<T> where T : BandSocket {
 
 	/// <summary>Band instance</summary>
-	private Band band;
+	private Band Band;
 
 	/// <summary>Band main service socket</summary>
-	private BandSocket socket;
+	private BandSocket Cargo;
 
 	/// <summary>Band push service socket</summary>
-	private BandSocket socketPush;
+	private BandSocket Push;
 
 
 	/// <summary>
 	/// Create a new connection to a given Band.
 	/// 
-	/// Socket instances are created for receive/push using the 
+	/// Socket instances are created for Cargo and Push using the 
 	/// given socket type for the connection type, which must 
 	/// implement `BandSocket`.
 	/// </summary>
 	/// <param name="band">Band instance</param>
 	public BandConnection(Band band) {
-
-		/// Band MAC address
-		this.band = band;
-
-		/// Band main service socket
-		this.socket = Activator.CreateInstance(typeof (T), new object[] {
-			band.getMac(), Network.PORT_MAIN
-		}) as T;
-
-		/// Band push service socket
-		this.socketPush = Activator.CreateInstance(typeof (T), new object[] {
-			band.getMac(), Network.PORT_PUSH
-		}) as T;
-
+		this.Band = band;
+		this.Cargo = Activator.CreateInstance(typeof (T));
+		this.Push = Activator.CreateInstance(typeof (T));
 	}
 
 
-	/// <summary>Connect all sockets.</summary>
+	/// <summary>Connect to the Band on Cargo and Push.</summary>
 	/// <returns>Task</returns>
-	public async Task connect() {
-		await this.socket.connect();
-		await this.socketPush.connect();
+	public async Task Connect() {
+		await this.Cargo.connect(this.Band, this.Band.CARGO);
+		await this.Push.connect(this.Band, this.Band.PUSH);
 	}
 
 
-	/// <summary>Disconnect all sockets.</summary>
+	/// <summary>Disconnect all open band sockets.</summary>
 	/// <returns>Task</returns>
-	public async Task disconnect() {
-		await this.socket.disconnect();
-		await this.socketPush.disconnect();
+	public async Task Disconnect() {
+		await this.Cargo.disconnect();
+		await this.Push.disconnect();
 	}
 
 
@@ -65,8 +54,8 @@ public class BandConnection<T> where T : BandSocket {
 	/// Get the Band instance.
 	/// </summary>
 	/// <returns>Band</returns>
-	public Band getBand() {
-		return this.band;
+	public Band GetBand() {
+		return this.Band;
 	}
 
 }

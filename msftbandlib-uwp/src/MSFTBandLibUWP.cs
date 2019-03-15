@@ -10,7 +10,7 @@ public static class MSFTBandLibUWP {
 	/// <summary>Create a new Band connection.</summary>
 	/// <param name="band">Band instance</param>
 	/// <returns>BandConnection</returns>
-	public static BandConnection<BandSocketUWP> connection(Band band) {
+	public static BandConnection<BandSocketUWP> Connection(Band band) {
 		return new BandConnection<BandSocketUWP>(band);
 	}
 
