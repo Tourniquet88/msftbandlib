@@ -1,6 +1,6 @@
 using System;
 
-namespace MSFTBandLibUWP.Exceptions {
+namespace MSFTBandLib.Exceptions {
 
 /// <summary>Band not connected exception</summary>
 public class BandNotConnectedException : Exception {
