@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MSFTBandLib {
@@ -13,13 +14,13 @@ public interface BandClient<T> where T : class, BandSocket {
     /// </summary>
     /// <param name="band">Band instance</param>
     /// <returns>BandConnection<T></returns>
-    Task<BandConnection<T>> GetConnection(Band band);
+   BandConnection<BandSocket> GetConnection(Band band);
 
     /// <summary>
     /// Get an array of all available paired Bands which can be connected to.
     /// </summary>
-    /// <returns>Band[]</returns>
-    Task<Band[]> GetPairedBands();
+    /// <returns>List<Band></returns>
+    Task<List<Band>> GetPairedBands();
 
 }
 
