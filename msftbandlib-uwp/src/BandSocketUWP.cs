@@ -1,5 +1,5 @@
 using MSFTBandLib;
-using MSFTBandLibUWP.Exceptions;
+using MSFTBandLib.Exceptions;
 using System;
 using System.Threading.Tasks;
 using Windows.Networking;
@@ -19,17 +19,11 @@ public class BandSocketUWP : BandSocket {
 	protected StreamSocket socket;
 
 
-	/// <summary>Construct a new socket.</summary>
-	/// <param name="address">Device MAC address</param>
-	/// <param name="port">Socket port</param>
-	public BandSocketUWP(string address, int port) : base(address, port) {}
-
-
 	/// <summary>Connect to the device (open socket).</summary>
-	public async override Task connect() {
+	public async Task Connect(Band band, string service) {
 		this.socket = new StreamSocket();
 		await this.socket.ConnectAsync(
-			new HostName(this.address), this.port.ToString(),
+			new HostName(band.GetAddress()), service,
 			SocketProtectionLevel.BluetoothEncryptionAllowNullAuthentication
 		);
 		this.connected = true;
@@ -37,7 +31,7 @@ public class BandSocketUWP : BandSocket {
 
 
 	/// <summary>Close the connection socket.</summary>
-	public async override Task disconnect() {
+	public async Task Disconnect() {
 		await Task.Run(() => this.socket.Dispose());
 		this.connected = false;
 	}
@@ -47,7 +41,7 @@ public class BandSocketUWP : BandSocket {
 	/// <param name="buffer">Buffer size to use</param>
 	/// <returns>Task<byte[]></returns>
 	/// <exception cref="BandNotConnectedException">No Band.<exception>
-	public async override Task<byte[]> receive(int buffer) {
+	public async Task<byte[]> Receive(int buffer) {
 		if (!this.connected) throw new BandNotConnectedException();
 		byte[] b = await Task.Run(() => {
 			byte[] c = { 0x00 };
@@ -61,7 +55,7 @@ public class BandSocketUWP : BandSocket {
 	/// <param name="packet">Bytes to send</param>
 	/// <returns>Task</returns>
 	/// <exception cref="BandNotConnectedException">No Band.<exception>
-	public async override Task send(byte[] packet) {
+	public async Task Send(byte[] packet) {
 		if (!this.connected) throw new BandNotConnectedException();
 	}
 
