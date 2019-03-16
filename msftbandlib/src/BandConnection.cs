@@ -1,13 +1,12 @@
 using System;
 using System.Threading.Tasks;
-using MSFTBandLib.Libs;
 
 namespace MSFTBandLib {
 
 /// <summary>
 /// Microsoft Band connection class
 /// </summary>
-public class BandConnection<T> where T : BandSocket {
+public class BandConnection<T> where T : class, BandSocket {
 
 	/// <summary>Band instance</summary>
 	private Band Band;
@@ -29,24 +28,24 @@ public class BandConnection<T> where T : BandSocket {
 	/// <param name="band">Band instance</param>
 	public BandConnection(Band band) {
 		this.Band = band;
-		this.Cargo = Activator.CreateInstance(typeof (T));
-		this.Push = Activator.CreateInstance(typeof (T));
+		this.Cargo = Activator.CreateInstance(typeof(T), new object[]{}) as T;
+		this.Push = Activator.CreateInstance(typeof(T), new object[]{}) as T;
 	}
 
 
 	/// <summary>Connect to the Band on Cargo and Push.</summary>
 	/// <returns>Task</returns>
 	public async Task Connect() {
-		await this.Cargo.connect(this.Band, this.Band.CARGO);
-		await this.Push.connect(this.Band, this.Band.PUSH);
+		await this.Cargo.Connect(this.Band, Band.CARGO);
+		await this.Push.Connect(this.Band, Band.PUSH);
 	}
 
 
 	/// <summary>Disconnect all open band sockets.</summary>
 	/// <returns>Task</returns>
 	public async Task Disconnect() {
-		await this.Cargo.disconnect();
-		await this.Push.disconnect();
+		await this.Cargo.Disconnect();
+		await this.Push.Disconnect();
 	}
 
 
