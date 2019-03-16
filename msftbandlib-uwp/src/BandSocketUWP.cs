@@ -57,6 +57,7 @@ public class BandSocketUWP : BandSocket {
 	/// <exception cref="BandNotConnectedException">No Band.<exception>
 	public async Task Send(byte[] packet) {
 		if (!this.connected) throw new BandNotConnectedException();
+		await Task.Run(() => null);
 	}
 
 }
