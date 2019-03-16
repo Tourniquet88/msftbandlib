@@ -7,7 +7,7 @@
     <ProjectGuid>{77C203C6-A9E6-47A5-8E7B-FA0DF978ABA1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MSFTBandLibUWP</RootNamespace>
+    <RootNamespace>MSFTBandLib.UWP</RootNamespace>
     <AssemblyName>msftbandlib-uwp</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
