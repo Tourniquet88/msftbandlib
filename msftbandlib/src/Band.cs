@@ -8,6 +8,9 @@ public class Band {
 	/// <summary>MAC address</summary>
 	protected string Address;
 
+	///	<summary>Band name</summary>
+	protected string Name;
+
 	/// <summary>Cargo service UUID</summary>
 	public const string CARGO = "a502ca97-2ba5-413c-a4e0-13804e47b38f";
 
@@ -26,8 +29,9 @@ public class Band {
 
 	/// <summary>Construct a new device instance.</summary>
 	/// <param name="address">MAC address</param>
-	public Band(string mac) {
-		this.Address = address;
+	public Band(string mac, string name) {
+		this.Address = mac;
+		this.Name = name;
 	}
 
 
@@ -35,6 +39,13 @@ public class Band {
 	/// <returns>string</returns>
 	public string GetAddress() {
 		return this.Address;
+	}
+
+
+	/// <summary>Gets the name of the Band.</summary>
+	/// <returns>string</returns>
+	public string GetName() {
+		return this.Name;
 	}
 
 }
