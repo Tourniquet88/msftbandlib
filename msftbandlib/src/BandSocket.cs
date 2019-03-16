@@ -5,7 +5,7 @@ namespace MSFTBandLib {
 /// <summary>
 /// Band socket interface
 /// </summary>
-interface BandSocket {
+public interface BandSocket {
 
 	/// <summary>Connect to a Band.</summary>
 	/// <param name="band">Band instance</param>
