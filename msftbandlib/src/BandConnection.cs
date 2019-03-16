@@ -36,8 +36,8 @@ public class BandConnection<T> where T : class, BandSocket {
 	/// <summary>Connect to the Band on Cargo and Push.</summary>
 	/// <returns>Task</returns>
 	public async Task Connect() {
-		await this.Cargo.Connect(this.Band, Band.CARGO);
-		await this.Push.Connect(this.Band, Band.PUSH);
+		await this.Cargo.Connect(this.Band, Band.CARGO.ToString());
+		await this.Push.Connect(this.Band, Band.PUSH.ToString());
 	}
 
 
