@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Windows.Networking;
 using Windows.Networking.Sockets;
 
-namespace MSFTBandLibUWP {
+namespace MSFTBandLib.UWP {
 
 /// <summary>
 /// Band socket UWP implementation

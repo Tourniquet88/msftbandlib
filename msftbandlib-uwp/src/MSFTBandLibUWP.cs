@@ -6,19 +6,29 @@ using Windows.Devices.Enumeration;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Rfcomm;
 
-namespace MSFTBandLibUWP {
+namespace MSFTBandLib.UWP {
 
 /// <summary>
 /// MSFTBandLib UWP implementation
 /// </summary>
-public class MSFTBandLibUWP : BandClient<BandSocketUWP> {
+public class MSFTBandLibUWP : BandClient {
 
+	/// <summary>
+	/// Get a connection to a given Band.
+	/// </summary>
+	/// <param name="band">Band instance</param>
+	/// <returns>BandConnection<BandSocket></returns>
 	public BandConnection<BandSocket> GetConnection(Band band) {
 		BandConnection<BandSocketUWP> connection;
 		connection = new BandConnection<BandSocketUWP>(band);
 		return (BandConnection<BandSocket>) (object) connection;
 	}
 
+
+	/// <summary>
+	///	Get list of all available paired Bands.
+	/// </summary>
+	/// <returns>Task<List<Band>></returns>
 	public async Task<List<Band>> GetPairedBands() {
 		string selector;
 		RfcommServiceId cargo;

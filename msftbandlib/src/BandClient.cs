@@ -6,8 +6,7 @@ namespace MSFTBandLib {
 /// <summary>
 /// Band client interface
 /// </summary>
-/// <typeparam name="T">Band connection socket</typeparam>
-public interface BandClient<T> where T : class, BandSocket {
+public interface BandClient {
 
     /// <summary>
     /// Get a connection to a given Band instance.
