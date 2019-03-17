@@ -2,6 +2,8 @@ using MSFTBandLib;
 using MSFTBandLib.Exceptions;
 using System;
 using System.Threading.Tasks;
+using Windows.Devices.Bluetooth;
+using Windows.Devices.Bluetooth.Rfcomm;
 using Windows.Networking;
 using Windows.Networking.Sockets;
 
@@ -20,10 +22,17 @@ public class BandSocketUWP : BandSocket {
 
 
 	/// <summary>Connect to the device (open socket).</summary>
-	public async Task Connect(Band band, string service) {
+	/// <param name="band">Band instance</summary>
+	///	<param name="uuid">Rfcomm service UUID</summary>
+	/// <returns>Task</returns>
+	public async Task Connect(Band band, Guid uuid) {
+		HostName host;
+		RfcommDeviceService service;
+		host = new HostName(band.GetAddress());
+		service = await GetRfcommDeviceServiceForHostFromUuid(host, uuid);
 		this.socket = new StreamSocket();
 		await this.socket.ConnectAsync(
-			new HostName(band.GetAddress()), service,
+			host, service.ConnectionServiceName,
 			SocketProtectionLevel.BluetoothEncryptionAllowNullAuthentication
 		);
 		this.connected = true;
@@ -58,6 +67,26 @@ public class BandSocketUWP : BandSocket {
 	public async Task Send(byte[] packet) {
 		if (!this.connected) throw new BandNotConnectedException();
 		await Task.Run(() => null);
+	}
+
+
+	///	<summary>
+	///	Get an `RfcommDeviceService` instance for a given Rfcomm 
+	///		service UUID of a given hostname.
+	/// </summary>
+	/// <param name="host">Hostname of device</param>
+	/// <param name="uuid">Rfcomm service UUID</param>
+	/// <returns>Task<RfcommDeviceService></returns>
+	public static async Task<RfcommDeviceService> 
+		GetRfcommDeviceServiceForHostFromUuid(HostName host, Guid uuid) {
+
+		BluetoothDevice device;
+		RfcommServiceId id;
+		RfcommDeviceServicesResult services;
+		id = RfcommServiceId.FromUuid(uuid);
+		device = await BluetoothDevice.FromHostNameAsync(host);
+		services = await device.GetRfcommServicesForIdAsync(id);
+		return services.Services[0];
 	}
 
 }

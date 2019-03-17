@@ -15,13 +15,15 @@ public class MSFTBandLibUWP : BandClient {
 
 	/// <summary>
 	/// Get a connection to a given Band.
+	/// 
+	/// Constructs a new connection instance and connects to the Band.
 	/// </summary>
 	/// <param name="band">Band instance</param>
 	/// <returns>BandConnection<BandSocket></returns>
-	public BandConnection<BandSocket> GetConnection(Band band) {
-		BandConnection<BandSocketUWP> connection;
-		connection = new BandConnection<BandSocketUWP>(band);
-		return (BandConnection<BandSocket>) (object) connection;
+	public async Task<BandInterface> GetConnection(Band band) {
+		BandInterface BandConnection = new BandConnection<BandSocketUWP>();
+		await BandConnection.Connect(band);
+		return BandConnection;
 	}
 
 

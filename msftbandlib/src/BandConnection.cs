@@ -6,7 +6,7 @@ namespace MSFTBandLib {
 /// <summary>
 /// Microsoft Band connection class
 /// </summary>
-public class BandConnection<T> where T : class, BandSocket {
+public class BandConnection<T> : BandInterface where T : class, BandSocket {
 
 	/// <summary>Band instance</summary>
 	private Band Band;
@@ -25,19 +25,23 @@ public class BandConnection<T> where T : class, BandSocket {
 	/// given socket type for the connection type, which must 
 	/// implement `BandSocket`.
 	/// </summary>
-	/// <param name="band">Band instance</param>
-	public BandConnection(Band band) {
-		this.Band = band;
-		this.Cargo = Activator.CreateInstance(typeof(T), new object[]{}) as T;
-		this.Push = Activator.CreateInstance(typeof(T), new object[]{}) as T;
+	public BandConnection() {
+		this.Cargo = Activator.CreateInstance(
+			typeof(T), new object[]{}
+		) as T;
+		this.Push = Activator.CreateInstance(
+			typeof(T), new object[]{}
+		) as T;
 	}
 
 
-	/// <summary>Connect to the Band on Cargo and Push.</summary>
+	/// <summary>Connect to a Band.</summary>
+	/// <param name="band">Band instance</param>
 	/// <returns>Task</returns>
-	public async Task Connect() {
-		await this.Cargo.Connect(this.Band, Band.CARGO.ToString());
-		await this.Push.Connect(this.Band, Band.PUSH.ToString());
+	public async Task Connect(Band band) {
+		this.Band = band;
+		await this.Cargo.Connect(this.Band, Band.CARGO);
+		await this.Push.Connect(this.Band, Band.PUSH);
 	}
 
 
@@ -46,6 +50,7 @@ public class BandConnection<T> where T : class, BandSocket {
 	public async Task Disconnect() {
 		await this.Cargo.Disconnect();
 		await this.Push.Disconnect();
+		this.Band = null;
 	}
 
 

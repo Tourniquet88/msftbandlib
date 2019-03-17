@@ -8,18 +8,18 @@ namespace MSFTBandLib {
 /// </summary>
 public interface BandClient {
 
-    /// <summary>
-    /// Get a connection to a given Band instance.
-    /// </summary>
-    /// <param name="band">Band instance</param>
-    /// <returns>BandConnection<T></returns>
-   BandConnection<BandSocket> GetConnection(Band band);
+	/// <summary>
+	/// Get a connection to a given Band instance.
+	/// </summary>
+	/// <param name="band">Band instance</param>
+	/// <returns>Task<BandInterface></returns>
+   Task<BandInterface> GetConnection(Band band);
 
-    /// <summary>
-    /// Get an array of all available paired Bands which can be connected to.
-    /// </summary>
-    /// <returns>List<Band></returns>
-    Task<List<Band>> GetPairedBands();
+	/// <summary>
+	/// Get an array of all available paired Bands.
+	/// </summary>
+	/// <returns>Task<List<Band>></returns>
+	Task<List<Band>> GetPairedBands();
 
 }
 

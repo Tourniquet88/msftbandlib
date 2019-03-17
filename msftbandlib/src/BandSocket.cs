@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 namespace MSFTBandLib {
@@ -9,9 +10,9 @@ public interface BandSocket {
 
 	/// <summary>Connect to a Band.</summary>
 	/// <param name="band">Band instance</param>
-	/// <param name="service">Service UUID</param>
+	/// <param name="uuid">Rfcomm service UUID</param>
 	/// <returns>Task</returns>
-	Task Connect(Band band, string service);
+	Task Connect(Band band, Guid uuid);
 
 	/// <summary>Close the connection.</summary>
 	/// <returns>Task</returns>
