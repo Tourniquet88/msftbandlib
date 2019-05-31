@@ -14,11 +14,11 @@ namespace MSFTBandLibTests {
 		/// Test values are derived from `libmsftband`.
 		/// </summary>
 		[TestMethod]
-		public void BandCommand_GetCommandUshortFromFacility() {
-			ushort subscribe = BandCommand.GetCommandUshortFromFacility(
+		public void BandCommand_CreateFacility() {
+			ushort subscribe = BandCommand.Create(
 				Facility.LibraryRemoteSubscription, false, 0
 			);
-			ushort get_tiles = BandCommand.GetCommandUshortFromFacility(
+			ushort get_tiles = BandCommand.Create(
 				Facility.ModuleInstalledAppList, true, 0
 			);
 			Assert.AreEqual(subscribe, 36608);
