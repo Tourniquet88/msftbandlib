@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "msftbandlib", "msftbandlib\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "msftbandlib-uwp", "msftbandlib-uwp\msftbandlib-uwp.csproj", "{77C203C6-A9E6-47A5-8E7B-FA0DF978ABA1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "msftbandlib-tests", "msftbandlib-tests\msftbandlib-tests.csproj", "{4603EA99-773E-4A03-9070-D721A79AC572}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,26 @@ Global
 		{77C203C6-A9E6-47A5-8E7B-FA0DF978ABA1}.Release|x64.Build.0 = Release|x64
 		{77C203C6-A9E6-47A5-8E7B-FA0DF978ABA1}.Release|x86.ActiveCfg = Release|x86
 		{77C203C6-A9E6-47A5-8E7B-FA0DF978ABA1}.Release|x86.Build.0 = Release|x86
+		{4603EA99-773E-4A03-9070-D721A79AC572}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4603EA99-773E-4A03-9070-D721A79AC572}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4603EA99-773E-4A03-9070-D721A79AC572}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{4603EA99-773E-4A03-9070-D721A79AC572}.Debug|ARM.Build.0 = Debug|Any CPU
+		{4603EA99-773E-4A03-9070-D721A79AC572}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{4603EA99-773E-4A03-9070-D721A79AC572}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{4603EA99-773E-4A03-9070-D721A79AC572}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4603EA99-773E-4A03-9070-D721A79AC572}.Debug|x64.Build.0 = Debug|Any CPU
+		{4603EA99-773E-4A03-9070-D721A79AC572}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4603EA99-773E-4A03-9070-D721A79AC572}.Debug|x86.Build.0 = Debug|Any CPU
+		{4603EA99-773E-4A03-9070-D721A79AC572}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4603EA99-773E-4A03-9070-D721A79AC572}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4603EA99-773E-4A03-9070-D721A79AC572}.Release|ARM.ActiveCfg = Release|Any CPU
+		{4603EA99-773E-4A03-9070-D721A79AC572}.Release|ARM.Build.0 = Release|Any CPU
+		{4603EA99-773E-4A03-9070-D721A79AC572}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{4603EA99-773E-4A03-9070-D721A79AC572}.Release|ARM64.Build.0 = Release|Any CPU
+		{4603EA99-773E-4A03-9070-D721A79AC572}.Release|x64.ActiveCfg = Release|Any CPU
+		{4603EA99-773E-4A03-9070-D721A79AC572}.Release|x64.Build.0 = Release|Any CPU
+		{4603EA99-773E-4A03-9070-D721A79AC572}.Release|x86.ActiveCfg = Release|Any CPU
+		{4603EA99-773E-4A03-9070-D721A79AC572}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
