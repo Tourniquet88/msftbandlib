@@ -1,4 +1,5 @@
 using MSFTBandLib;
+using MSFTBandLib.Libs;
 using MSFTBandLib.Exceptions;
 using System;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Rfcomm;
 using Windows.Networking;
 using Windows.Networking.Sockets;
+using Windows.Storage.Streams;
 
 namespace MSFTBandLib.UWP {
 
@@ -19,6 +21,12 @@ public class BandSocketUWP : BandSocket {
 
 	/// <summary>Socket</summary>
 	protected StreamSocket socket;
+
+	/// <summary>Socket data reader</summary>
+	protected DataReader socketReader;
+
+	/// <summary>Socket data writer</summary>
+	protected DataWriter socketWriter;
 
 
 	/// <summary>Connect to the device (open socket).</summary>
@@ -35,13 +43,22 @@ public class BandSocketUWP : BandSocket {
 			host, service.ConnectionServiceName,
 			SocketProtectionLevel.BluetoothEncryptionAllowNullAuthentication
 		);
+		this.socketReader = new DataReader(this.socket.InputStream);
+		this.socketReader.InputStreamOptions = InputStreamOptions.Partial;
+		this.socketWriter = new DataWriter(this.socket.OutputStream);
 		this.connected = true;
 	}
 
 
 	/// <summary>Close the connection socket.</summary>
 	public async Task Disconnect() {
-		await Task.Run(() => this.socket.Dispose());
+		await Task.Run(() => {
+			this.socketReader.DetachStream();
+			this.socketReader.Dispose();
+			this.socketWriter.DetachStream();
+			this.socketWriter.Dispose();
+			this.socket.Dispose();
+		});
 		this.connected = false;
 	}
 
@@ -51,12 +68,12 @@ public class BandSocketUWP : BandSocket {
 	/// <returns>Task<byte[]></returns>
 	/// <exception cref="BandNotConnectedException">No Band.<exception>
 	public async Task<byte[]> Receive(int buffer) {
+		Byte[] response = new byte[Network.BUFFER_SIZE];
 		if (!this.connected) throw new BandNotConnectedException();
-		byte[] b = await Task.Run(() => {
-			byte[] c = { 0x00 };
-			return c;
-		});
-		return b;
+		uint result = await this.socketReader.LoadAsync(Network.BUFFER_SIZE);
+		this.socketReader.ReadBytes(response);
+		System.Diagnostics.Debug.WriteLine(response);
+		return response;
 	}
 
 
@@ -66,7 +83,9 @@ public class BandSocketUWP : BandSocket {
 	/// <exception cref="BandNotConnectedException">No Band.<exception>
 	public async Task Send(byte[] packet) {
 		if (!this.connected) throw new BandNotConnectedException();
-		await Task.Run(() => null);
+		DataWriter DataWriter = new DataWriter(this.socket.OutputStream);
+		this.socketWriter.WriteBytes(packet);
+		await this.socketWriter.StoreAsync();
 	}
 
 
