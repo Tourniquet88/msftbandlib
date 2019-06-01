@@ -1,4 +1,5 @@
 using MSFTBandLib.Libs;
+using System.IO;
 
 namespace MSFTBandLib {
 
@@ -26,6 +27,30 @@ public static class BandCommand {
 	/// <returns>ushort</returns>
 	public static ushort Create(Facility facility, bool tx, int index) {
 		return (ushort) ((int) facility << 8 | (tx ? 1 : 0) << 7 | index);
+	}
+
+
+	/// <summary>Create a command packet.</summary>
+	/// <param name="command">Commnad</param>
+	/// <param name="DataSize">Size of data which will be sent</param>
+	/// <param name="args">Arguments to send</param>
+	/// <param name="argsPrependSize">Prepend size of arguments</param>
+	/// <returns>byte[]</returns>
+	public static byte[] CreatePacket(
+		ushort command, int DataSize=0,
+		byte[] args=null, bool argsPrependSize=false) {
+
+		MemoryStream str = new MemoryStream();
+		BinaryWriter writer = new BinaryWriter(str);
+		if (argsPrependSize) {
+			if (args == null) writer.Write(new byte[8]);
+			else writer.Write(new byte[(8 +  args.Length)]);
+		}
+		writer.Write((ushort) 12025);
+		writer.Write(command);
+		writer.Write(DataSize);
+		if (args != null) writer.Write(args);
+		return str.ToArray();
 	}
 
 }
