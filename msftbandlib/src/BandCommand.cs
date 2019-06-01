@@ -1,4 +1,5 @@
 using MSFTBandLib.Libs;
+using System;
 using System.IO;
 
 namespace MSFTBandLib {
@@ -31,25 +32,66 @@ public static class BandCommand {
 
 
 	/// <summary>Create a command packet.</summary>
-	/// <param name="command">Commnad</param>
-	/// <param name="DataSize">Size of data which will be sent</param>
+	/// <param name="command">Command</param>
+	/// <param name="DataSize">Size of data to send/receive</param>
 	/// <param name="args">Arguments to send</param>
-	/// <param name="argsPrependSize">Prepend size of arguments</param>
+	/// <param name="argsLenPrefix">Prepend size of arguments</param>
 	/// <returns>byte[]</returns>
 	public static byte[] CreatePacket(
-		ushort command, int DataSize=0,
-		byte[] args=null, bool argsPrependSize=false) {
+		Command command, int DataSize=0,
+		byte[] args=null, bool argsPrepend=false) {
 
+		byte[] arguments = args;
 		MemoryStream str = new MemoryStream();
 		BinaryWriter writer = new BinaryWriter(str);
-		if (argsPrependSize) {
-			if (args == null) writer.Write(new byte[8]);
-			else writer.Write(new byte[(8 +  args.Length)]);
-		}
+
+		// When no arguments given, we use expected data/response size
+		if (args == null) arguments = GetCommandDefaultArgs(DataSize);
+
+		// When prepending length of arguments, encode it as byte in array
+		if (argsPrepend) writer.Write(GetArgsLenBytes(arguments.Length));
+
+		// Write the command packet
+		// - 12025 (TODO: What is this for?)
+		// - Command `ushort`
+		// - Expected data/response size, 
 		writer.Write((ushort) 12025);
-		writer.Write(command);
+		writer.Write((ushort) command);
 		writer.Write(DataSize);
-		if (args != null) writer.Write(args);
+
+		// Write arguments if present; otherwise 
+		// 	we have to repeat the data/response size
+		if (arguments.Length > 0) {
+			writer.Write(arguments);
+		}
+		else writer.Write(DataSize);
+
+		return str.ToArray();
+	}
+
+
+	/// <summary>
+	/// Get byte array to prepend to command packet when including 
+	/// 	length of arguments as a prefix.
+	/// </summary>
+	/// <param name="length">Length of arguments</param>
+	/// <returns>byte[]</returns>
+	public static byte[] GetArgsLenBytes(int length) {
+		return new byte[] { (byte) (8 + length) };
+	}
+
+
+	/// <summary>
+	/// Get default command arguments bytes to use when none given 
+	/// 	for a command; we have to add the expected data size 
+	/// 	as a single byte in the bytes array.
+	/// </summary>
+	/// <param name="DataSize">Size of data to send/receive</param>
+	/// <returns>byte[]</returns>
+	public static byte[] GetCommandDefaultArgs(int DataSize) {
+		MemoryStream str = new MemoryStream();
+		BinaryWriter writer = new BinaryWriter(str);
+		writer.Write(DataSize);
 		return str.ToArray();
 	}
 
