@@ -67,14 +67,11 @@ public class BandSocketUWP : BandSocket {
 	/// <returns>Task<byte[]></returns>
 	/// <exception cref="BandNotConnectedException">No Band.<exception>
 	public async Task<byte[]> Receive(int buffer) {
-		byte[] response = new byte[buffer];
 		if (!this.connected) throw new BandNotConnectedException();
-		System.Diagnostics.Debug.WriteLine("Trying to read response...");
-		uint result = await this.socketReader.LoadAsync((uint) buffer);
-		System.Diagnostics.Debug.WriteLine("Got response");
-		this.socketReader.ReadBytes(response);
-		System.Diagnostics.Debug.WriteLine(response);
-		return response;
+		uint len = await this.socketReader.LoadAsync((uint) buffer);
+		byte[] bytes = new byte[len];
+		this.socketReader.ReadBytes(bytes);
+		return bytes;
 	}
 
 
@@ -84,7 +81,6 @@ public class BandSocketUWP : BandSocket {
 	/// <exception cref="BandNotConnectedException">No Band.<exception>
 	public async Task Send(byte[] packet) {
 		if (!this.connected) throw new BandNotConnectedException();
-		System.Diagnostics.Debug.WriteLine("Sending packet...");
 		this.socketWriter.WriteBytes(packet);
 		await this.socketWriter.StoreAsync();
 	}
