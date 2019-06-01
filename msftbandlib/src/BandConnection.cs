@@ -64,11 +64,8 @@ public class BandConnection<T> : BandInterface where T : class, BandSocket {
 	public async Task<byte[]> Read(
 		Command command, int ResponseSize=0, byte[] args=null) {
 
-		MemoryStream argsStream = new MemoryStream();
-		BinaryWriter argsWriter = new BinaryWriter(argsStream);
-		if (args == null) argsWriter.Write(ResponseSize);
 		byte[] packet = BandCommand.CreatePacket(
-			(ushort) command, ResponseSize, args, true
+			command, ResponseSize, args, true
 		);
 		return await this.Cargo.SendReceive(packet, Network.BUFFER_SIZE);
 	}
