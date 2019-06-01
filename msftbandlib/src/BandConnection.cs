@@ -1,4 +1,6 @@
+using MSFTBandLib.Libs;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace MSFTBandLib {
@@ -51,6 +53,24 @@ public class BandConnection<T> : BandInterface where T : class, BandSocket {
 		await this.Cargo.Disconnect();
 		await this.Push.Disconnect();
 		this.Band = null;
+	}
+
+
+	/// <summary>Read data from the device.</summary>
+	/// <param name="command">Command</param>
+	/// <param name="ResponseSize">Expected response size</param>
+	/// <param name="args">Arguments to sends</param>
+	/// <returns>Task<byte[]></returns>
+	public async Task<byte[]> Read(
+		Command command, int ResponseSize=0, byte[] args=null) {
+
+		MemoryStream argsStream = new MemoryStream();
+		BinaryWriter argsWriter = new BinaryWriter(argsStream);
+		if (args == null) argsWriter.Write(ResponseSize);
+		byte[] packet = BandCommand.CreatePacket(
+			(ushort) command, ResponseSize, args, true
+		);
+		return await this.Cargo.SendReceive(packet, Network.BUFFER_SIZE);
 	}
 
 

@@ -28,6 +28,13 @@ public interface BandSocket {
 	/// <returns>Task</returns>
 	Task Send(byte[] packet);
 
+
+	/// <summary>Send bytes to the device and get a response.</summary>
+	/// <param name="packet">Bytes to send</param>
+	/// <param name="buffer">Buffer size to receive from</param>
+	/// <returns>Task<byte[]></returns>
+	Task<byte[]> SendReceive(byte[] packet, int buffer);
+
 }
 
 }

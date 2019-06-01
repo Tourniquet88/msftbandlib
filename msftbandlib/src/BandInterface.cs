@@ -1,3 +1,4 @@
+using MSFTBandLib.Libs;
 using System;
 using System.Threading.Tasks;
 
@@ -19,6 +20,15 @@ public interface BandInterface {
     /// Disconnect from the Band if connected.
     /// </summary>
     Task Disconnect();
+
+    /// <summary>Read data from the device.</summary>
+    /// <param name="command">Command</param>
+    /// <param name="ResponseSize">Expected response size</param>
+    /// <param name="args">Arguments to sends</param>
+    /// <returns>Task<byte[]></returns>
+    Task<byte[]> Read(
+        Command command, int ResponseSize=0, byte[] args=null
+    );
 
 }
 
