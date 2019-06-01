@@ -1,5 +1,4 @@
 using MSFTBandLib;
-using MSFTBandLib.Libs;
 using MSFTBandLib.Exceptions;
 using System;
 using System.Threading.Tasks;
@@ -68,9 +67,11 @@ public class BandSocketUWP : BandSocket {
 	/// <returns>Task<byte[]></returns>
 	/// <exception cref="BandNotConnectedException">No Band.<exception>
 	public async Task<byte[]> Receive(int buffer) {
-		Byte[] response = new byte[Network.BUFFER_SIZE];
+		byte[] response = new byte[buffer];
 		if (!this.connected) throw new BandNotConnectedException();
-		uint result = await this.socketReader.LoadAsync(Network.BUFFER_SIZE);
+		System.Diagnostics.Debug.WriteLine("Trying to read response...");
+		uint result = await this.socketReader.LoadAsync((uint) buffer);
+		System.Diagnostics.Debug.WriteLine("Got response");
 		this.socketReader.ReadBytes(response);
 		System.Diagnostics.Debug.WriteLine(response);
 		return response;
@@ -83,9 +84,20 @@ public class BandSocketUWP : BandSocket {
 	/// <exception cref="BandNotConnectedException">No Band.<exception>
 	public async Task Send(byte[] packet) {
 		if (!this.connected) throw new BandNotConnectedException();
-		DataWriter DataWriter = new DataWriter(this.socket.OutputStream);
+		System.Diagnostics.Debug.WriteLine("Sending packet...");
 		this.socketWriter.WriteBytes(packet);
 		await this.socketWriter.StoreAsync();
+	}
+
+
+	/// <summary>Send bytes to the device and get a response.</summary>
+	/// <param name="packet">Bytes to send</param>
+	/// <param name="buffer">Buffer size to receive from</param>
+	/// <returns>Task<byte[]></returns>
+	public async Task<byte[]> SendReceive(byte[] packet, int buffer) {
+		await this.Send(packet);
+		byte[] response = await this.Receive(buffer);
+		return response;
 	}
 
 
