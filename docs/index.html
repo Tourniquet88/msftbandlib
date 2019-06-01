@@ -1,0 +1,157 @@
+<!--
+msftbandlib
+/index.html
+©James Walker 2019. Licensed under the MIT License.
+-->
+
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<title>MSFTBandLib, a third-party Microsoft Bank SDK</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="description" content="MSFTBandLib is a third-party Microsoft Band SDK in .NET Standard with platform implementations for UWP and Android, created to enable the development of new Microsoft Band client applications beyond the official end of support in May 2019.">
+		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+
+		<style type="text/css">
+			body {
+				font-family: sans-serif;
+				margin: 0 auto;
+				max-width: 960px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header>
+			<h1>MSFTBandLib</h1>
+			<p><i>A third-party Microsoft Band SDK in .NET Standard. Created by <a href="https://github.com/ilmiont">ilmiont</a> (James Walker)</i>.</p>
+			<ul>
+				<li><a href="https://github.com/ilmiont/msftbandlib">GitHub</a></li>
+				<li><a href="https://ilmiont.github.io/msftbandapp">MSFTBandApp</a> (cross-platform Microsoft Band client app using this library)</li>
+			</ul>
+		</header>
+
+		<main>
+			<article>
+				<p>MSFTBandLib is a third-party Microsoft Band SDK implementation in .NET Standard. It is created to allow the development of new Microsoft Band client applications beyond the official end of support for the Band in May 2019.</p>
+				<p>This library is currently in very early development and is highly experimental. Please see the news feed below for details on the status of the project.</p>
+				<p>The long-term aim is to provide a fully-featured .NET Standard SDK for the Microsoft Band 1 (Cargo) and Microsoft Band 2 (Envoy), including platform implementations for UWP and Android. It is desirable to be able to lift all health metrics from the device, and power all interactive features of the device.</p>
+				<p>This project relies on the ground-breaking previous work of others who have sought to reverse-engineer the Band's Bluetooth commands; in particular, <i>ksiazkowicz</i>'s <a href="https://github.com/ksiazkowicz/libmsftband">libmsftband</a> has proven to be a greatly informative resource while developing this library.</p>
+				<p><a href="https://ilmiont.github.io/msftbandapp">MSFTBandApp</a> is a cross-platform app by this author which makes use of this library.</p>
+				<p>MSFTBandApp and MSFTBandLib are open-source projects licensed under the MIT License.</p>
+			</article>
+
+			<section>
+				<h2>Introduction</h2>
+
+				<p>MSFTBandLib commenced development after Microsoft announced it would be shutting down Microsoft Health on 31/05/2019. Consequently, Microsoft Band owners are no longer able to sync their data to the cloud, or use any features of the official Microsoft Band mobile apps (even offline-only ones).</p>
+				<p>The result of this is that perfectly good hardware now operates in an extremely limited capacity, with users restricted to just the on-device functions of the Band.</p>
+				<p>This author, and many other Band owners and fans, expressed a desire to create a new community-driven Band client to once again unlock the full potential of the device.</p>
+				<p>MSFTBandLib was created to enable this. It's an SDK for interacting with Microsoft Band devices, created with the intention of eventually supporting all features of the official Microsoft Band SDK, mobile apps and hardware, including data export, live tile updates and notifications.</p>
+				<p>MSFTBandLib is written from scratch and communicates directly with the Microsoft Band over Bluetooth RFCOMM; it has no dependencies on any official Microsoft Band software components. The author of this project is not responsible for the reverse-engineering of the Band's Bluetooth commands; work is already ongoing on this by more knowledgeable and experienced people, notably <i>ksiazkowicz</i>'s <a href="https://github.com/ksiazkowicz/libmsftband">libmsftband</a>, to which MSFTBandLib is greatly indebted for providing a good reference for the Band's Bluetooth communications.</p>
+				<p>Further information on the project is contained in the following sections.</p>
+
+				<h3>Architecture</h3>
+				<p>MSFTBandLib is developed in C# using .NET Standard and consists of classes for interacting with Microsoft Band devices in an abstracted manner.</p>
+				<p>The library also provides platform implementations for UWP and Android (planned), using the native Bluetooth/networking stacks of each operating sytem.</p>
+				<p>Therefore, to use in a UWP app, you will need to add references to <code>MSFTBandLib.dll</code> in MSFTBandLib, and <code>msftbandlib-uwp.dll</code> in MSFTBandLibUWP. The platform-specific implementation is used to get an instance of a Band connection using your platform's Bluetooth stack; this connection object can then be used with the abstracted common components in the .NET Standard core library (MSFTBandLib).</p>
+				<p>It is possible to develop your own platform implementation by implementing the required MSFTBandLib connection interfaces using your platform's Bluetooth stack.</p>
+
+				<h3>Motivation</h3>
+				<p>It's anticipated the most frequently asked question about this project will be <i>why do you need to create a new SDK from scratch?</i></p>
+				<p>It is true that you could develop a reasonably complete Microsoft Band client app using only the original Microsoft SDK; indeed, many have done so in the past. However, the SDK does not expose all features of the Band, and is not designed to fulfil the intentions of this project.</p>
+				<p>The official SDK concentrates primarily on exposing <i>real-time</i> access to the Band's sensor streams, as well as control of its interactive features (live tiles and notifications). However, it does not provide built-in methods to extract cumulative data dumps/archives, such as  daily activity values, exercise logs or Me tile metrics.</p>
+				<p>In short, the official SDK is meant to complement and extend the official app and Microsoft Health backend; not replace their core functions entirely. MSFTBandLib explicitly seeks to replace all official Microsoft Band software components, since they are all now offline and unsupported as of June 2019.</p>
+				<p>Therefore, the official SDK is inadequate for the needs of anyone seeking to develop a new Microsoft Band client which has feature parity with the original Microsoft app. It should also be recognised that the Microsoft SDK is now unsupported, is no longer publicly available for download, and will not be maintained, making its use in any new client app inherently risky.</p>
+				<p>Therefore, it is felt by the author and others in the  community that any serious effort to develop a new Microsoft Band app to replace the original one should be backed by a new community SDK, which can be maintained going forward and is not hindered by the restrictions, limitations and deprecated nature of the original one. MSFTBandLib seeks to be such an SDK.</p>
+			</section>
+
+			<section>
+				<h2>Binary builds/downloads</h2>
+
+				<p>At this time, no prebuilt binaries are available.</p>
+				<p>MSFTBandLib is in very early development and is highly experimental. Prebuilt DLLs will be offered once it is felt the core API is stable enough to warrant an alpha release.</p>
+			</section>
+
+			<section>
+				<h2>Using the library</h2>
+
+				<p>MSFTBandLib is in very early development and is highly experimental. The API is currently in a constant state of change and many aspects of the architecture remain undecided.</p>
+				<p>There is no documentation and there are no prebuilt DLLs. Therefore MSFTBandLib is not ready for inclusion in any third-party apps and is not supported in any way.</p>
+				<p>Should you experiment regardless, be aware that future builds may incorporate massive API changes and that these changes will not be documented in any way.</p>
+			</section>
+
+			<section>
+				<h2>Documentation</h2>
+
+				<p>MSFTBandLib is in very early development and is highly experimental. The API is currently in a constant state of change and many aspects of the architecture remain undecided.</p>
+				<p>Documentation will not be published until the core API is finalised and an alpha release is made available.</p>
+			</section>
+
+			<section>
+				<h2>Development</h2>
+
+				<p>Contributions to this project are welcome.</p>
+				<p>In particular, the lead author is currently looking for assistance in:</p>
+				<ul>
+					<li>Developing the Android implementation</li>
+					<li>Developing the UWP implementation</li>
+					<li>Reverse-engineering the Microsoft Band's Bluetooth commands</li>
+					<li>Writing tests and documentation</li>
+				</ul>
+				<p><i>This is my first major project to use C# and .NET; I am learning almost everything as I go along. Input from developers more experienced with these technologies is welcome.</i></p>
+			</section>
+
+			<section>
+				<h2>Roadmap</h2>
+
+				<p>This is a rough roadmap defining the implementation timeline for key components.</p>
+
+				<ul>
+					<li><strong>June 2019</strong> – Core API implementation; UWP platform implementation; experimental proof-of-concept builds with support for pulling activity data from Band devices</li>
+					<li><strong>Future priorities</strong> – Fully support pulling all metrics from device; support changing settings on device; support setting up brand new device (OOBE); Android platform implementation; support notification sync in platform implementations</li>
+					<li><strong>General aims</strong> – Achieve feature parity with official original Microsoft Band app and SDK</li>
+				</ul>
+
+				<p><i>Roadmap is subject to major change.</i></p>
+			</section>
+
+			<hr>
+
+			<section>
+				<h2>News + Status</h2>
+
+				<p>This is a live development blog published by <a href="https://github.com/ilmiont">ilmiont</a> with updates on the project's status and achievements as they happen.</p>
+
+				<h3>#1 – Hello World – 01-06-2016 11:30</h3>
+				<p>Hello World! This is the first development blog entry for MSFTBandLib, the new Microsoft Band SDK I'm developing with .NET Standard with the intention of replacing the original Band SDK and enabling the creation of new third-party Band client apps beyond May 2019.</p>
+				<p>For information on the project's aims, architecture and general roadmap, please refer to the webpage above.</p>
+				<p>Development on this project commenced in March 2019, shortly after Microsoft announced it would take the Microsoft Health servers offline on 31/05/2019. Over the course of a few days, I laid the groundwork for the project, with <a href="https://github.com/ksiazkowicz/libmsftband">libmsftband</a> by <i>ksiazkowicz</i> proving an invaluable resource as I came to understand the Band's Bluetooth communications.</p>
+				<p>Unfortunately, development halted shortly thereafter as I found myself inundanted with work from other commitments. Consequently, the end of support crept up on me and no further development was completed.</p>
+				<p>So here we are, it's June, and the Microsoft Health servers were shutdown as scheduled yesterday. The <a href="https://dashboard.microsofthealth.com">dashboard.microsofthealth.com</a> site is completely dead, and doesn't even have a redirect in place. The Band mobile apps display a generic error and syncing is gone for good.</p>
+				<p>With the servers gone, I've now returned to this project and plan a big development sprint over this weekend. I want to get to a point ASAP where it is feasible to write a new client app (see <a href="https://ilmiont.github.io/msftbandapp">MSFTBandApp</a>) which can export daily activity dumps from the Band, ensuring there is no data loss while efforts to create a more complete client app are ongoing. Although the Band can theoretically store data for weeks, if not months, without syncing, I don't want to be reliant on its onboard storage for any longer than is needed – after all, catastrophic battery failure could occur at any moment...</p>
+				<p>This brings us to today. As it stands, MSFTBandLib is extremely experimental. I've not finalised the core architecture, there isn't support for any Band features, and it's really just a collection of libraries storing constants related to the Band's Bluetooth commands.</p>
+				<p>The groundwork for the connection architecture is in-place, and there is a work-in-progress UWP implementation of this which can successfully detect and connect to paired Bands.</p>
+				<p>My aim for this weekend is to finalise the core connection architecture, and complete an initial experimental platform implementation of this for UWP. I then intend to implement proof-of-concept support for some simple Band commands.</p>
+				<p>Refresh this page periodically to get the latest updates! All code is published on <a href="https://github.com/ilmiont/msftbandlib">GitHub</a>.</p>
+			</section>
+
+		</main>
+
+		<hr>
+
+		<footer>
+			<p>You've reached the end!</p>
+			<p>Last updated: 01-06-2019. Page built with plain old HTML and CSS.</p>
+			<p>&copy;James Walker 2019. MSFTBandLib is licensed under the MIT License.</p>
+		</footer>
+	</body>
+
+</html>
+
+<!--
+End of file.
+-->
