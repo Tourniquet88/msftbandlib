@@ -4,7 +4,7 @@ using MSFTBandLib.Libs;
 namespace MSFTBandLib {
 
 /// <summary>Commands</summary>
-public enum Commands : ushort {
+public enum Command : ushort {
 
 	ChunkCounts = 35977,
 
