@@ -4,77 +4,111 @@ using MSFTBandLib.Libs;
 namespace MSFTBandLib {
 
 /// <summary>Commands</summary>
-public static class Commands {
+public enum Commands : ushort {
 
-	/// Facility.LibraryConfiguration
+	ChunkCounts = 35977,
 
-	public static readonly ushort GetSerialNumber = BandCommand.Create(
-		Facility.LibraryConfiguration, true, 8
-	);
+	ChunkRangeDelete = 35856,
 
+	ChunkRangeGetData = 35983,
 
-	/// Facility.LibraryTime
+	ChunkRangeGetMetadata = 35982,
 
-	public static readonly ushort GetDeviceTime = BandCommand.Create(
-		Facility.LibraryTime, true, 2
-	);
+	FlushLog = 35853,
 
-	public static readonly ushort SetDeviceTime = BandCommand.Create(
-		Facility.LibraryTime, false, 1
-	);
+	GetApiVersion = 30342,
 
+	GetDeviceName = 30339,
 
-	/// Facility.ModuleFireballUI
+	GetDeviceTime = 30082,
 
-	public static readonly ushort GetMeTileImage = BandCommand.Create(
-		Facility.ModuleFireballUI, true, 14
-	);
+	GetLogVersion = 30341,
 
-	public static readonly ushort SetMeTileImage = BandCommand.Create(
-		Facility.ModuleFireballUI, false, 17
-	);
+	GetMaxTileCount = 54421,
 
-	public static readonly ushort SetUIScreen = BandCommand.Create(
-		Facility.ModuleFireballUI, false, 0
-	);
+	GetMaxTileCountAllocated = 54422,
 
+	GetMeTileImage = 50062,
 
-	/// Facility.ModuleInstalledAppList
+	GetMeTileImageId = 51858,
 
-	public static readonly ushort GetTile = BandCommand.Create(
-		Facility.ModuleInstalledAppList, true, 7
-	);
+	GetSdkVersion = 30215,
 
-	public static readonly ushort GetTiles = BandCommand.Create(
-		Facility.ModuleInstalledAppList, true, 0
-	);
+	GetSerialNumber = 30856,
 
-	public static readonly ushort GetTilesDefaults = BandCommand.Create(
-		Facility.ModuleInstalledAppList, true, 4
-	);
+	GetSettingsMask = 54413,
 
-	public static readonly ushort SetTile = BandCommand.Create(
-		Facility.ModuleInstalledAppList, false, 6
-	);
+	GetStatisticsRun = 52866,
 
-	public static readonly ushort SetTiles = BandCommand.Create(
-		Facility.ModuleInstalledAppList, false, 1
-	);
+	GetStatisticsSleep = 52868,
 
-	public static readonly ushort SyncStartStripStart = BandCommand.Create(
-		Facility.ModuleInstalledAppList, false, 2
-	);
+	GetStatisticsWorkout = 52867,
 
-	public static readonly ushort SyncStartStripEnd = BandCommand.Create(
-		Facility.ModuleInstalledAppList, false, 3
-	);
+	GetStatisticsWorkoutGuided = 52869,
 
+	GetTile = 54407,
 
-	/// Facility.ModuleThemeColor
+	GetTiles = 54400,
 
-	public static readonly ushort SetThemeColor = BandCommand.Create(
-		Facility.ModuleThemeColor, false, 0
-	);
+	GetTilesDefaults = 54404,
+
+	GetTilesNoImages = 54418,
+
+	GetUniqueId = 30337,
+
+	Notification = 52224,
+
+	OobeFinalise = 44290,
+
+	OobeGetComplete = 51859,
+
+	OobeSetComplete = 51713,
+
+	OobeGetStage = 44417,
+
+	OobeSetStage = 44288,
+
+	ProfileGetDataApp = 50566,
+
+	ProfileGetDataFw = 50568,
+
+	ProfileSetDataApp = 50439,
+
+	ProfileSetDataFw = 50441,
+
+	SetDeviceTime = 29953,
+
+	SetMeTileImage = 49937,
+
+	SetSettingsMask = 54286,
+
+	SetThemeColor = 55296,
+
+	SetTile = 54278,
+
+	SetTiles = 54273,
+
+	StartStripSyncEnd = 54275,
+
+	StartStripSyncStart = 54274,
+
+	Subscribe = 36608,
+
+	SubscriptionGetData = 36739,
+
+	SubscriptionGetDataLength = 36738,
+
+	SubscriptionSubscribeId = 36615,
+
+	SubscriptionUnsubscribeId = 36616,
+
+	TilesDisableSetting = 54288,
+
+	TilesEnableSetting = 54287,
+
+	UINavigateScreen = 49920,
+
+	Unsubscribe = 36609
 
 }
 
