@@ -3,7 +3,7 @@ using MSFTBandLib.Libs;
 namespace MSFTBandLib {
 
 /// <summary>Band command</summary>
-public class BandCommand {
+public static class BandCommand {
 
 	/// <summary>
 	/// Create a new command given a Band facility.
