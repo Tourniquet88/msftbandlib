@@ -1,4 +1,5 @@
 using MSFTBandLib.Command;
+using MSFTBandLib.Includes;
 using MSFTBandLib.Libs;
 using System;
 using System.IO;
@@ -63,15 +64,17 @@ public class BandConnection<T> : BandInterface where T : class, BandSocket {
 	/// <param name="command">Command</param>
 	/// <param name="args">Arguments to send</param>
 	/// <param name="buffer">Receiving buffer size</param>
-	/// <returns>Task<byte[]></returns>
-	public async Task<byte[]> Command(
+	/// <returns>Task<ByteArray></returns>
+	public async Task<ByteArray> Command(
 		Command.Command command,
 		byte[] args=null, int buffer=Network.BUFFER_SIZE) {
 
+		byte[] bytes;
 		CommandPacket packet = new CommandPacket(command, args);
-		return await this.Cargo.SendReceive(packet.GetBytes(), buffer);
+		bytes = await this.Cargo.SendReceive(packet.GetBytes(), buffer);
+		return new ByteArray(bytes);
 	}
-	
+
 
 	/// <summary>
 	/// Get the Band instance.

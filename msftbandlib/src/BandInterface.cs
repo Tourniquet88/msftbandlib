@@ -1,4 +1,5 @@
 using MSFTBandLib.Command;
+using MSFTBandLib.Includes;
 using MSFTBandLib.Libs;
 using System.Threading.Tasks;
 
@@ -27,8 +28,8 @@ public interface BandInterface {
     /// <param name="command">Command</param>
     /// <param name="args">Arguments to send</param>
     /// <param name="buffer">Receiving buffer size</param>
-    /// <returns>Task<byte[]></returns>
-    Task<byte[]> Command(
+    /// <returns>Task<ByteArray></returns>
+    Task<ByteArray> Command(
         Command.Command command,
         byte[] args=null, int buffer=Network.BUFFER_SIZE
     );
