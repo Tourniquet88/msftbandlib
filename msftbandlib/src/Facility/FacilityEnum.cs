@@ -1,7 +1,7 @@
-namespace MSFTBandLib.Libs {
+namespace MSFTBandLib.Facility {
 
 /// <summary>Facility identifiers</summary>
-public enum Facility : int {
+public enum FacilityEnum : int {
 
     Invalid = 0,
 
