@@ -1,28 +1,24 @@
 using System;
 using System.Threading.Tasks;
-using MSFTBandLib.Command;
+using MSFTBandLib;
+using MSFTBandLib.Includes;
 
 namespace MSFTBandLib.Time {
 
 /// <summary>Time service</summary>
-public class TimeService {
-
-	/// <summary>Band connection instance</summary>
-	protected BandInterface Band;
-
-
+public class TimeService : BandService {
+	
 	/// <summary>Time service</summary>
-	/// <param name="Band">Band connection instance</param>
-	/// <returns>public</returns>
-	public TimeService(BandInterface Band) {
-		this.Band = Band;
-	}
-
+	/// <param name="band">Band connection instance</param>
+	public TimeService(BandInterface band) : base(band) {}
+	
 
 	/// <summary>Get device time.</summary>
-	/// <returns>Task<byte[]></returns>
-	public async Task<byte[]> GetDeviceTime() {
-		return await this.Band.Command(Command.Command.GetDeviceTime);
+	/// <returns>Task<TimeDomain></returns>
+	public async Task<TimeDomain> GetDeviceTime() {
+		ByteArray bytes;
+		bytes = await this.Band.Command(Command.Command.GetDeviceTime);
+		return TimeDomain.CreateFromBandBytes(bytes);
 	}
 	
 }
