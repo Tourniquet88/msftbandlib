@@ -1,3 +1,4 @@
+using MSFTBandLib.Command;
 using MSFTBandLib.Libs;
 using System;
 using System.IO;
@@ -56,20 +57,21 @@ public class BandConnection<T> : BandInterface where T : class, BandSocket {
 	}
 
 
-	/// <summary>Read data from the device.</summary>
+	/// <summary>
+	/// Send command to the device and get response bytes.
+	/// </summary>
 	/// <param name="command">Command</param>
-	/// <param name="ResponseSize">Expected response size</param>
-	/// <param name="args">Arguments to sends</param>
+	/// <param name="args">Arguments to send</param>
+	/// <param name="buffer">Receiving buffer size</param>
 	/// <returns>Task<byte[]></returns>
-	public async Task<byte[]> Read(
-		Command command, int ResponseSize=0, byte[] args=null) {
+	public async Task<byte[]> Command(
+		Command.Command command,
+		byte[] args=null, int buffer=Network.BUFFER_SIZE) {
 
-		byte[] packet = BandCommand.CreatePacket(
-			command, ResponseSize, args, true
-		);
-		return await this.Cargo.SendReceive(packet, Network.BUFFER_SIZE);
+		CommandPacket packet = new CommandPacket(command, args);
+		return await this.Cargo.SendReceive(packet.GetBytes(), buffer);
 	}
-
+	
 
 	/// <summary>
 	/// Get the Band instance.

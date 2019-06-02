@@ -1,5 +1,5 @@
+using MSFTBandLib.Command;
 using MSFTBandLib.Libs;
-using System;
 using System.Threading.Tasks;
 
 namespace MSFTBandLib {
@@ -21,13 +21,16 @@ public interface BandInterface {
     /// </summary>
     Task Disconnect();
 
-    /// <summary>Read data from the device.</summary>
+    /// <summary>
+    /// Send command to the device and get response bytes.
+    /// </summary>
     /// <param name="command">Command</param>
-    /// <param name="ResponseSize">Expected response size</param>
-    /// <param name="args">Arguments to sends</param>
+    /// <param name="args">Arguments to send</param>
+    /// <param name="buffer">Receiving buffer size</param>
     /// <returns>Task<byte[]></returns>
-    Task<byte[]> Read(
-        Command command, int ResponseSize=0, byte[] args=null
+    Task<byte[]> Command(
+        Command.Command command,
+        byte[] args=null, int buffer=Network.BUFFER_SIZE
     );
 
 }
