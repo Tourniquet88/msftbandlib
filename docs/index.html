@@ -127,6 +127,12 @@ msftbandlib
 
 				<p>This is a live development blog published by <a href="https://github.com/ilmiont">ilmiont</a> with updates on the project's status and achievements as they happen.</p>
 
+				<h3>#4 – More work on command architecture – 02-06-2019 20:45</h3>
+				<p>End of the second day since I resumed this project.</p>
+				<p>Much work on refactoring the command architecture... getting there, at least for outbound packets! Still some way to go to get a flexible response packet model working.</p>
+				<p>Encountering issues with the UWP socket implementation. On my test cases of two commands (get device time and get serial number), time is working, but serial number is only returning the status bytes, without the data bytes. Seems to be kind of timing issue as stepping through in debugger results in it all working... but everything is executed with <code>await</code> so I need to look deeper here.</p>
+				<p>Tomorrow, if I get a chance, more of the same... I want a really solid, object-oriented request/response infrastructure before I start implementing support for any actual features.</p>
+
 				<h3>#3 – Command architecture refactoring – 02-06-2019 12:00</h3>
 				<p>This morning I've rewritten everything associated with commands as I move towards developing a working architecture.</p>
 				<p>Now the command infrastructure is a module of its own, and command packets are their own objects. Commands are still defined in an <code>enum</code> but now have custom attributes to store their own metadata in a reasonably object-oriented fashion (another new C# feature for me).</p>
