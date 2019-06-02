@@ -7,7 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "msftbandlib", "msftbandlib\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "msftbandlib-uwp", "msftbandlib-uwp\msftbandlib-uwp.csproj", "{77C203C6-A9E6-47A5-8E7B-FA0DF978ABA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "msftbandlib-tests", "msftbandlib-tests\msftbandlib-tests.csproj", "{4603EA99-773E-4A03-9070-D721A79AC572}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "msftbandlib-tests", "msftbandlib-tests\msftbandlib-tests.csproj", "{4603EA99-773E-4A03-9070-D721A79AC572}"
+	ProjectSection(ProjectDependencies) = postProject
+		{576BC0DE-1F70-4F6E-B00D-5357C333072A} = {576BC0DE-1F70-4F6E-B00D-5357C333072A}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
