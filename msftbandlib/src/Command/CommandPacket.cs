@@ -9,7 +9,7 @@ namespace MSFTBandLib.Command {
 public class CommandPacket {
 
 	/// <summary>Command</summary>
-	protected Command Command;
+	protected CommandEnum Command;
 
 	/// <summary>Arguments</summary>
 	protected byte[] args = null;
@@ -22,7 +22,7 @@ public class CommandPacket {
 	/// </summary>
 	/// <param name="command">Command</param>
 	/// <param name="args">Arguments</param>
-	public CommandPacket(Command command, byte[] args=null) {
+	public CommandPacket(CommandEnum command, byte[] args=null) {
 
 		// Command
 		this.Command = command;
@@ -79,7 +79,7 @@ public class CommandPacket {
 	/// </summary>
 	/// <returns>byte[]</returns>
 	public byte[] GetBytes() {
-		ByteArray bytes = new ByteArray();
+		ByteStream bytes = new ByteStream();
 		bytes.BinaryWriter.Write(this.GetArgsSizeBytes());
 		bytes.BinaryWriter.Write((ushort) 12025);
 		bytes.BinaryWriter.Write((ushort) this.Command);

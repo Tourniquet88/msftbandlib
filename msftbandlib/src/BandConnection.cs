@@ -16,10 +16,10 @@ public class BandConnection<T> : BandInterface where T : class, BandSocket {
 	private Band Band;
 
 	/// <summary>Band main service socket</summary>
-	private BandSocket Cargo;
+	private readonly BandSocket Cargo;
 
 	/// <summary>Band push service socket</summary>
-	private BandSocket Push;
+	private readonly BandSocket Push;
 
 
 	/// <summary>
@@ -59,20 +59,18 @@ public class BandConnection<T> : BandInterface where T : class, BandSocket {
 
 
 	/// <summary>
-	/// Send command to the device and get response bytes.
+	/// Send command to the device and get a response.
 	/// </summary>
 	/// <param name="command">Command</param>
 	/// <param name="args">Arguments to send</param>
 	/// <param name="buffer">Receiving buffer size</param>
-	/// <returns>Task<ByteArray></returns>
-	public async Task<ByteArray> Command(
-		Command.Command command,
-		byte[] args=null, int buffer=Network.BUFFER_SIZE) {
-
-		byte[] bytes;
+	/// <returns>Task<CommandResponse></returns>
+	public async Task<CommandResponse> Command(
+		CommandEnum command,
+		byte[] args=null, uint buffer=Network.BUFFER_SIZE) {
+		
 		CommandPacket packet = new CommandPacket(command, args);
-		bytes = await this.Cargo.SendReceive(packet.GetBytes(), buffer);
-		return new ByteArray(bytes);
+		return await this.Cargo.Request(packet, buffer);
 	}
 
 

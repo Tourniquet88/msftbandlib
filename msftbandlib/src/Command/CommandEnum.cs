@@ -1,7 +1,7 @@
 namespace MSFTBandLib.Command {
 
 /// <summary>Commands</summary>
-public enum Command : ushort {
+public enum CommandEnum : ushort {
 
 	ChunkCounts = 35977,
 
@@ -32,6 +32,7 @@ public enum Command : ushort {
 
 	GetSdkVersion = 30215,
 
+	[CommandDataSize(12)]
 	GetSerialNumber = 30856,
 
 	GetSettingsMask = 54413,

@@ -1,3 +1,5 @@
+using MSFTBandLib.Command;
+using MSFTBandLib.Facility;
 using MSFTBandLib.Includes;
 using MSFTBandLib.Libs;
 using System;
@@ -28,7 +30,7 @@ public static class CommandHelper {
 	/// <param name="tx">TX bit</param>
 	/// <param name="index">Index</param>
 	/// <returns>ushort</returns>
-	public static ushort Create(Facility facility, bool tx, int index) {
+	public static ushort Create(FacilityEnum facility, bool tx, int index) {
 		return (ushort) ((int) facility << 8 | (tx ? 1 : 0) << 7 | index);
 	}
 
@@ -36,8 +38,8 @@ public static class CommandHelper {
 	/// <summary>Get the data size associated with a command.</summary>
 	/// <param name="command">Command</param>
 	/// <returns>int</returns>
-	public static int GetCommandDataSize(Command command) {
-		FieldInfo fi = typeof(Command).GetRuntimeField(command.ToString());
+	public static int GetCommandDataSize(CommandEnum command) {
+		FieldInfo fi = typeof(CommandEnum).GetRuntimeField(command.ToString());
 		Attribute attr = fi.GetCustomAttribute(typeof(CommandDataSize));
 		return ((CommandDataSize) attr).DataSize;
 	}
@@ -51,8 +53,8 @@ public static class CommandHelper {
 	/// </summary>
 	/// <param name="command">Command</param>
 	/// <returns>byte[]</returns>
-	public static byte[] GetCommandDefaultArgumentsBytes(Command command) {
-		ByteArray bytes = new ByteArray();
+	public static byte[] GetCommandDefaultArgumentsBytes(CommandEnum command) {
+		ByteStream bytes = new ByteStream();
 		bytes.BinaryWriter.Write(CommandHelper.GetCommandDataSize(command));
 		return bytes.GetBytes();
 	}

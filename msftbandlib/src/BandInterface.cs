@@ -28,10 +28,10 @@ public interface BandInterface {
     /// <param name="command">Command</param>
     /// <param name="args">Arguments to send</param>
     /// <param name="buffer">Receiving buffer size</param>
-    /// <returns>Task<ByteArray></returns>
-    Task<ByteArray> Command(
-        Command.Command command,
-        byte[] args=null, int buffer=Network.BUFFER_SIZE
+    /// <returns>Task<CommandResponse></returns>
+    Task<CommandResponse> Command(
+        CommandEnum command,
+        byte[] args=null, uint buffer=Network.BUFFER_SIZE
     );
 
 }
