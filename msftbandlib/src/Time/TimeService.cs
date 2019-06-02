@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using MSFTBandLib;
+using MSFTBandLib.Command;
 using MSFTBandLib.Includes;
 
 namespace MSFTBandLib.Time {
@@ -16,9 +17,10 @@ public class TimeService : BandService {
 	/// <summary>Get device time.</summary>
 	/// <returns>Task<TimeDomain></returns>
 	public async Task<TimeDomain> GetDeviceTime() {
-		ByteArray bytes;
-		bytes = await this.Band.Command(Command.Command.GetDeviceTime);
-		return TimeDomain.CreateFromBandBytes(bytes);
+		CommandEnum Command = CommandEnum.GetDeviceTime;
+		CommandResponse Response = await this.Band.Command(Command);
+		TimeResponse ResponseTime = new TimeResponse(Response);
+		return ResponseTime.CreateTimeDomain();
 	}
 	
 }
