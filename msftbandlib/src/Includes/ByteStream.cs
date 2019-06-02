@@ -4,17 +4,15 @@ using System.IO;
 namespace MSFTBandLib.Includes {
 
 /// <summary>
-/// Byte array include
+/// Byte stream class
 /// 
-/// This is a thin wrapper around `MemoryStream` and `BinaryWriter`; 
-/// 	you should write directly by accessing `BinaryWriter` 
-/// 	(avoid having to reimplement all `BinaryWriter.Write(...)` 
-/// 	overloads due to types).
+/// This is a thin wrapper around `MemoryStream`, `BinaryReader` 
+/// 	and `BinaryWriter` to simplify writing/reading byte arrays.
 /// </summary>
-public class ByteArray : IDisposable {
+public class ByteStream : IDisposable {
 
 	///	<summary>Disposed</summary>
-	public bool disposed  { get; protected set; }
+	public bool disposed { get; protected set; }
 
 	/// <summary>Memory stream</summary>
 	public MemoryStream MemoryStream;
@@ -27,7 +25,7 @@ public class ByteArray : IDisposable {
 
 
 	/// <summary>Construct.</summary>
-	public ByteArray() {
+	public ByteStream() {
 		this.MemoryStream = new MemoryStream();
 		this.BinaryReader = new BinaryReader(this.MemoryStream);
 		this.BinaryWriter = new BinaryWriter(this.MemoryStream);
@@ -37,7 +35,7 @@ public class ByteArray : IDisposable {
 	/// <summary>Construct and write bytes.</summary>
 	/// <param name="bytes">bytes</param>
 	/// <returns>public</returns>
-	public ByteArray(byte[] bytes) : this() {
+	public ByteStream(byte[] bytes) : this() {
 		this.Write(bytes);
 	}
 
