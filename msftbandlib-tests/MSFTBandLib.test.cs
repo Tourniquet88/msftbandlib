@@ -1,5 +1,6 @@
 using MSFTBandLib;
 using MSFTBandLib.Command;
+using MSFTBandLib.Facility;
 using MSFTBandLib.Libs;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -18,10 +19,10 @@ namespace MSFTBandLibTests {
 		[TestMethod]
 		public void Command_CommandHelper_Create() {
 			ushort subscribe = CommandHelper.Create(
-				Facility.LibraryRemoteSubscription, false, 0
+				FacilityEnum.LibraryRemoteSubscription, false, 0
 			);
 			ushort get_tiles = CommandHelper.Create(
-				Facility.ModuleInstalledAppList, true, 0
+				FacilityEnum.ModuleInstalledAppList, true, 0
 			);
 			Assert.AreEqual(36608, subscribe);
 			Assert.AreEqual(54400, get_tiles);
@@ -34,7 +35,7 @@ namespace MSFTBandLibTests {
 		///	</summary>
 		public void Command_CommandHelper_GetCommandDataSize() {
 			int time = CommandHelper.GetCommandDataSize(
-				Command.GetDeviceTime
+				CommandEnum.GetDeviceTime
 			);
 			Assert.AreEqual(16, time);
 		}
@@ -45,7 +46,9 @@ namespace MSFTBandLibTests {
 		/// </summary>
 		[TestMethod]
 		public void Command_CommandPacket() {
-			CommandPacket packet = new CommandPacket(Command.GetDeviceTime);
+			CommandPacket packet = new CommandPacket(
+				CommandEnum.GetDeviceTime
+			);
 			byte[] bytes = packet.GetBytes();
 			int[] ints = Array.ConvertAll(bytes, b => (int) b);
 			int[] intsExpect = new int[] {
