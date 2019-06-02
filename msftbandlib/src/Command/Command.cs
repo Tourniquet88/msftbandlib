@@ -1,7 +1,4 @@
-using MSFTBandLib;
-using MSFTBandLib.Libs;
-
-namespace MSFTBandLib {
+namespace MSFTBandLib.Command {
 
 /// <summary>Commands</summary>
 public enum Command : ushort {
@@ -20,6 +17,7 @@ public enum Command : ushort {
 
 	GetDeviceName = 30339,
 
+	[CommandDataSize(16)]
 	GetDeviceTime = 30082,
 
 	GetLogVersion = 30341,
