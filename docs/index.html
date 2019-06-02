@@ -127,6 +127,12 @@ msftbandlib
 
 				<p>This is a live development blog published by <a href="https://github.com/ilmiont">ilmiont</a> with updates on the project's status and achievements as they happen.</p>
 
+				<h3>#3 – Command architecture refactoring – 02-06-2019 12:00</h3>
+				<p>This morning I've rewritten everything associated with commands as I move towards developing a working architecture.</p>
+				<p>Now the command infrastructure is a module of its own, and command packets are their own objects. Commands are still defined in an <code>enum</code> but now have custom attributes to store their own metadata in a reasonably object-oriented fashion (another new C# feature for me).</p>
+				<p>The command flow is now fairly satisfactory, for the timebeing at least, although more testing is required to ensure command packets are generated properly for all possible commands.</p>
+				<p>Next up: work on getting data back from the Band into a reasonable format, at which point I can hopefully leave the command architecture and start implementing actual features.</p>
+
 				<h3>#2 – UWP socket initial implementation – 01-06-2019 20:30</h3>
 				<p>Today's work has been to progress the core architecture to a point where it's possible to start implementing support for some initial Band commands.</p>
 				<p>Work has been slow, due to my lack of experience with C#, .NET, Bluetooth networking... in short, it's been a day of grinding through issue after issue.</p>
