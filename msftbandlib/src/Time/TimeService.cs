@@ -19,8 +19,7 @@ public class TimeService : BandService {
 	public async Task<TimeDomain> GetDeviceTime() {
 		CommandEnum Command = CommandEnum.GetDeviceTime;
 		CommandResponse Response = await this.Band.Command(Command);
-		TimeResponse ResponseTime = new TimeResponse(Response);
-		return ResponseTime.CreateTimeDomain();
+		return (new TimeResponse(Response)).CreateTimeDomain();
 	}
 	
 }
