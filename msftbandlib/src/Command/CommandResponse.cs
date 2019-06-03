@@ -4,7 +4,19 @@ using System.Linq;
 
 namespace MSFTBandLib.Command {
 
-/// <summary>Command response class</summary>
+/// <summary>
+/// Command response class
+/// 
+/// Handles the parsing of packets received from the Band 
+/// 	into status and data bytes; Band will send data in 
+/// 	multiple transmissions for one response, and some 
+/// 	commands include the status bytes before the data 
+/// 	bytes, some include the status bytes after the data, 
+/// 	and some send the status bytes as a separate transmission.
+/// 	
+/// This class can handle all three cases when adding new 
+/// 	received response packets into the response instance.
+/// </summary>
 public class CommandResponse {
 
 	/// <summary>Status bytes</summary>
@@ -20,31 +32,39 @@ public class CommandResponse {
 	/// <summary>
 	/// Add a new response bytes sequence to the response.
 	/// 
-	/// Detects if the sequence is a status bytes sequence 
-	/// 	and sets the status bytes accordingly if so, 
-	/// 	adding any remaining bytes after the status bytes 
-	/// 	to the response data list.
+	/// Automatically detects the presence of the Band status 
+	/// 	byte sequence at the start of end of the bytes array 
+	/// 	and handles it accordingly, assigning it to `Status` 
+	/// 	(overwriting any previous `Status` found in a previous 
+	/// 	byte sequence added to this response instance) and using 
+	/// 	the rest of the bytes in the array as data bytes.
 	/// 	
-	/// The bytes are appended as a new item in the data list.
+	/// The data bytes are appended as a new item in the data list.
 	/// </summary>
 	/// <param name="bytes">bytes</param>
 	public void AddResponse(byte[] bytes) {
-
-		// Response is a status byte sequence
-		// TODO: Properly handle status; get error etc.
-		if (CommandResponse.ResponseBytesAreStatus(bytes)) {
-
-			// Store the status sequence
-			this.Status = bytes;
-
-			// Response may still contain data after status bytes
-			if (bytes.Length > RESPONSE_STATUS_LENGTH) {
-				this.Data.Add(bytes.Skip(RESPONSE_STATUS_LENGTH).ToArray());
+		if (ResponseBytesStartWithStatus(bytes)) {
+			this.Status = GetResponseStatusBytesStart(bytes);
+			if (ResponseBytesContainData(bytes)) {
+				this.AddResponseData(GetResponseDataBytesStart(bytes));
 			}
-
 		}
-		else this.Data.Add(bytes);
+		else if (ResponseBytesEndWithStatus(bytes)) {
+			this.Status = GetResponseStatusBytesEnd(bytes);
+			if (ResponseBytesContainData(bytes)) {
+				this.AddResponseData(GetResponseDataBytesEnd(bytes));
+			}
+		}
+		else this.AddResponseData(bytes);
+	}
 
+
+	/// <summary>
+	/// Add a response data bytes sequence to the data list.
+	/// </summary>
+	/// <param name="bytes">bytes</param>
+	protected void AddResponseData(byte[] bytes) {
+		this.Data.Add(bytes);
 	}
 
 
@@ -85,14 +105,115 @@ public class CommandResponse {
 
 
 	/// <summary>
-	/// Get whether an array of response bytes starts 
-	/// 	with a Band status byte sequence.
+	/// Get Band data bytes from the start of an array 
+	/// 	of response bytes, assuming the offset is 
+	/// 	the length of the Band status byte sequence.
+	/// 	
+	/// Does not verify the bytes actually are data bytes 
+	/// 	or that the offset is correct.
+	/// </summary>
+	/// <param name="bytes">bytes</param>
+	/// <returns>byte[]</returns>
+	public static byte[] GetResponseDataBytesStart(byte[] bytes) {
+		return bytes.Skip(RESPONSE_STATUS_LENGTH).ToArray();
+	}
+
+
+	/// <summary>
+	/// Get Band data bytes from the end of an array 
+	/// 	of response bytes, assuming the offset is 
+	/// 	the length of the Band status byte sequence.
+	/// 	
+	/// Does not verify the bytes actually are data bytes 
+	/// 	or that the offset is correct.
+	/// </summary>
+	/// <param name="bytes">bytes</param>
+	/// <returns>byte[]</returns>
+	public static byte[] GetResponseDataBytesEnd(byte[] bytes) {
+		int offset = (bytes.Length - RESPONSE_STATUS_LENGTH);
+		return bytes.Take(offset).ToArray();
+	}
+
+
+	/// <summary>
+	/// Get Band status bytes from the start of an array 
+	/// 	of response bytes, assuming the status byte 
+	/// 	sequence is of length `RESPONSE_STATUS_LENGTH`.
+	/// 	
+	/// Does not verify that the selected bytes are status bytes.
+	/// </summary>
+	/// <param name="bytes">bytes</param>
+	/// <returns>byte[]</returns>
+	public static byte[] GetResponseStatusBytesStart(byte[] bytes) {
+		return bytes.Take(RESPONSE_STATUS_LENGTH).ToArray();
+	}
+
+
+	/// <summary>
+	/// Get Band status bytes from the end of an array 
+	/// 	of response bytes, assuming the status byte 
+	/// 	sequence is of length `RESPONSE_STATUS_LENGTH`.
+	/// 	
+	/// Does not verify that the selected bytes are status bytes.
+	/// </summary>
+	/// <param name="bytes">bytes</param>
+	/// <returns>byte[]</returns>
+	public static byte[] GetResponseStatusBytesEnd(byte[] bytes) {
+		int offset = (bytes.Length - RESPONSE_STATUS_LENGTH);
+		return bytes.Skip(offset).ToArray();
+	} 
+
+
+	/// <summary>
+	/// Get whether an array of response bytes appears 
+	/// 	to be a Band status sequence (starts with 
+	/// 	Band status byte indicators).
 	/// </summary>
 	/// <param name="bytes">bytes</param>
 	/// <returns>bool</returns>
 	public static bool ResponseBytesAreStatus(byte[] bytes) {
 		int[] ints = bytes.Select(b => (int) b).ToArray();
 		return (ints[0] == 254 && ints[1] == 166);
+	}
+
+
+	/// <summary>
+	/// Get whether an array of Band response bytes appears 
+	/// 	to contain data bytes (array is longer than 
+	/// 	the regular status byte sequence length).
+	/// </summary>
+	/// <param name="bytes">bytes</param>
+	/// <returns>bool</returns>
+	public static bool ResponseBytesContainData(byte[] bytes) {
+		return (bytes.Length > RESPONSE_STATUS_LENGTH);
+	}
+
+
+	/// <summary>
+	/// Get whether an array of Band response bytes appears to 
+	/// 	start with a Band status byte sequence (bytes given 
+	/// 	by `GetResponseStatusBytesStart` appear to be status 
+	/// 	bytes as given by `ResponseBytesAreStatus`).
+	/// </summary>
+	/// <param name="bytes">bytes</param>
+	/// <returns>bool</returns>
+	public static bool ResponseBytesStartWithStatus(byte[] bytes) {
+		byte[] status = GetResponseStatusBytesStart(bytes);
+		return ResponseBytesAreStatus(status);
+	}
+
+
+	/// <summary>
+	/// Get whether an array of Band response bytes appears to 
+	/// 	end with a Band status byte sequence (bytes given 
+	/// 	by `GetResponseStatusBytesEnd` appear to be status 
+	/// 	bytes as given by `ResponseBytesAreStatus`).
+	/// </summary>
+	/// <param name="bytes">bytes</param>
+	/// <returns>bool</returns>
+	public static bool ResponseBytesEndWithStatus(byte[] bytes) {
+		byte[] status = GetResponseStatusBytesEnd(bytes);
+		return ResponseBytesAreStatus(status);
 	}
 
 }
