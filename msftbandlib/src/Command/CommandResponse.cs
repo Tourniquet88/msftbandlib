@@ -44,7 +44,6 @@ public class CommandResponse {
 
 		}
 		else this.Data.Add(bytes);
-		System.Diagnostics.Debug.WriteLine("Adding");
 
 	}
 
@@ -71,8 +70,17 @@ public class CommandResponse {
 	/// </summary>
 	/// <param name="index">index</param>
 	/// <returns>ByteStream</returns>
-	public ByteStream GetDataStream(int index=0) {
+	public ByteStream GetByteStream(int index=0) {
 		return new ByteStream(this.GetData(index));
+	}
+
+
+	/// <summary>
+	///	Get whether the response has status bytes.
+	/// </summary>
+	/// <returns>bool</returns>
+	public bool StatusReceived() {
+		return !this.Status.All(s => s == 0);
 	}
 
 
