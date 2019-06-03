@@ -34,7 +34,7 @@ public class TimeResponse {
 	/// </summary>
 	/// <returns>ushort[]</returns>
 	public ushort[] GetTimeData() {
-		return this.CommandResponse.GetDataStream().GetUshorts(8);
+		return this.CommandResponse.GetByteStream().GetUshorts(8);
 	}
 
 
