@@ -73,6 +73,28 @@ public class ByteStream : IDisposable {
 
 
 	/// <summary>
+	/// Read a string from the stream as characters from a 
+	/// 	given position in the stream (position is set 
+	/// 	and will not be restored).
+	/// 	
+	/// Note: Implemented with `BinaryReader.ReadChars`, instead 
+	/// 	of `BinaryReader.ReadString`, because the latter 
+	/// 	expects strings to be prepended with their length.
+	/// 
+	/// This implementation works with any string-like data and 
+	/// 	enables consumer to specify how many characters to get.
+	/// </summary>
+	/// <param name="position">Position to read from</param>
+	/// <param name="chars">Characters to read (0: all)</param>
+	/// <returns>string</returns>
+	public string GetString(int position=0, long chars=0) {
+		if (chars == 0) chars = this.BinaryReader.BaseStream.Length;
+		this.BinaryReader.BaseStream.Position = position;
+		return new string(this.BinaryReader.ReadChars((int) chars));
+	}
+
+
+	/// <summary>
 	/// Read a 2-byte unsigned integer from the stream using 
 	/// 	the `BinaryReader`. Sets stream to given position, 
 	/// 	and advances stream position by 2 once done. Uses 
