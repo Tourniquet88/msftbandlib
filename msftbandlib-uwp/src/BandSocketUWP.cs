@@ -86,17 +86,23 @@ public class BandSocketUWP : BandSocket {
 	/// <returns>Task<CommandResponse></returns>
 	/// <exception cref="BandNotConnectedException">No Band.<exception>
 	public async Task<CommandResponse> Receive(uint buffer) {
-		CommandResponse response = new CommandResponse();
-		if (!this.connected) throw new BandNotConnectedException();
+		return await Task.Run(async () => {
+			CommandResponse response = new CommandResponse();
+			if (!this.connected) throw new BandNotConnectedException();
 
-		// Keep receiving until we've got status or no data
-		while (true) {
-			uint bytes = await this.socketReader.LoadAsync(buffer);
-			response.AddResponse(this.ReadBytes(bytes));
-			if (response.Status.Length > 0 || bytes == 0) break;
-		}
+			// Keep receiving until we've got status or no data
+			while (true) {
+				uint bytes = 0;
+				response = await Task.Run(async () => {
+					bytes = await this.socketReader.LoadAsync(buffer);
+					response.AddResponse(this.ReadBytes(bytes));
+					return response;
+				});
+				if (response.StatusReceived() || bytes == 0) break;
+			}
 
-		return response;
+			return response;
+		});
 	}
 
 
