@@ -20,7 +20,7 @@ public class DeviceService : BandService {
 	public async Task<String> GetSerialNumber() {
 		CommandEnum command = CommandEnum.GetSerialNumber;
 		CommandResponse response = await this.Band.Command(command);
-		return "foobar";
+		return response.GetByteStream().GetString();
 	}
 
 }
