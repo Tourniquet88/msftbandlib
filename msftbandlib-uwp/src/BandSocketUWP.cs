@@ -40,7 +40,7 @@ public class BandSocketUWP : BandSocket {
 		RfcommDeviceService service;
 
 		/// Get Band connection
-		host = new HostName(band.GetAddress());
+		host = new HostName(band.Address);
 		service = await GetRfcommDeviceServiceForHostFromUuid(host, uuid);
 
 		// Create socket and attempt connection

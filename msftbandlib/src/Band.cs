@@ -9,10 +9,10 @@ namespace MSFTBandLib {
 public class Band {
 
 	/// <summary>MAC address</summary>
-	protected string Address;
+	public string Address { get; protected set; }
 
 	///	<summary>Band name</summary>
-	protected string Name;
+	public string Name { get; protected set; }
 
 	/// <summary>Cargo service UUID</summary>
 	public static readonly Guid CARGO = Guid.Parse(Services.CARGO);
@@ -35,20 +35,6 @@ public class Band {
 	public Band(string mac, string name) {
 		this.Address = mac;
 		this.Name = name;
-	}
-
-
-	/// <summary>Get MAC address.</summary>
-	/// <returns>string</returns>
-	public string GetAddress() {
-		return this.Address;
-	}
-
-
-	/// <summary>Gets the name of the Band.</summary>
-	/// <returns>string</returns>
-	public string GetName() {
-		return this.Name;
 	}
 
 }
