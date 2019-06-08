@@ -29,7 +29,7 @@ public class DateTime {
 	/// </summary>
 	/// <param name="times">Array of time values</param>
 	/// <returns>public</returns>
-	public TimeDomain(ushort[] times) {
+	public DateTime(ushort[] times) {
 		this.Year = times[0];
 		this.Month = times[1];
 		this.Day = times[2];
