@@ -75,6 +75,32 @@ public class ByteStream : IDisposable {
 
 
 	/// <summary>
+	/// Read an 4-byte unsigned integer from the stream using 
+	/// the `BinaryReader`. Sets stream to given position, and 
+	/// advances stream position by 4 once done. Little-endian encoding.
+	/// </summary>
+	/// <param name="position">position</param>
+	/// <returns>uint</returns>
+	public uint GetUint32(int position=0) {
+		this.BinaryReader.BaseStream.Position = position;
+		return this.BinaryReader.ReadUInt32();
+	}
+
+
+	/// <summary>
+	/// Read an 8-byte unsigned integer from the stream using 
+	/// the `BinaryReader`. Sets stream to given position, and 
+	/// advances stream position by 8 once done. Little-endian encoding.
+	/// </summary>
+	/// <param name="position">position</param>
+	/// <returns>ulong</returns>
+	public ulong GetUint64(int position=0) {
+		this.BinaryReader.BaseStream.Position = position;
+		return this.BinaryReader.ReadUInt64();
+	}
+
+
+	/// <summary>
 	/// Read a string from the stream as characters from a given 
 	/// position in the stream (position is set and will not be restored).
 	/// 	
