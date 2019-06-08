@@ -39,6 +39,7 @@ public enum CommandEnum : ushort {
 
 	GetStatisticsRun = 52866,
 
+	[CommandDataSize(54)]
 	GetStatisticsSleep = 52868,
 
 	GetStatisticsWorkout = 52867,
