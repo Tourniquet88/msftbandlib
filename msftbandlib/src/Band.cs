@@ -2,6 +2,8 @@ using MSFTBandLib;
 using MSFTBandLib.Command;
 using MSFTBandLib.Exceptions;
 using MSFTBandLib.Includes;
+using MSFTBandLib.Helpers;
+using MSFTBandLib.Metrics;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -26,7 +28,7 @@ where T : class, BandSocketInterface {
 	/// <summary>Get currently connected</summary>
 	public bool Connected {
 		get => this.Connection.Connected;
-		set => throw new Exception("Can't set connection status directly!");
+		set => throw new Exception("Can't change connection directly!");
 	}
 
 	/// <summary>Band Bluetooth connection</summary>
@@ -59,7 +61,7 @@ where T : class, BandSocketInterface {
 
 	/// <summary>Connect to the Band.</summary>
 	/// <returns>Task</returns>
-	/// <exception cref="BandConnected">Band already connected.</exception>
+	/// <exception cref="BandConnected">Band is connected.</exception>
 	public async Task Connect() {
 		if (!this.Connected) {
 			await this.Connection.Connect();
@@ -91,12 +93,17 @@ where T : class, BandSocketInterface {
 
 	/// <summary>Get the current device time.</summary>
 	/// <returns>Task<DateTime></returns>
-	public async Task<Includes.DateTime> GetDeviceTime() {
+	public async Task<DateTime> GetDeviceTime() {
 		var res = await this.Command(CommandEnum.GetDeviceTime);
-		ushort[] t = ((CommandResponse)res).GetByteStream().GetUshorts(8);
-		List<ushort> times = new List<ushort>(t);
-		times.RemoveAt(2);
-		return new Includes.DateTime(times.ToArray());
+		return TimeHelper.DateTimeResponse(((CommandResponse)res));
+	}
+
+
+	/// <summary>Get last sleep.</summary>
+	/// <returns>Task<Sleep></returns>
+	public async Task<Sleep> GetLastSleep() {
+		var res = await this.Command(CommandEnum.GetStatisticsSleep);
+		return new Sleep(((CommandResponse)res));
 	}
 
 

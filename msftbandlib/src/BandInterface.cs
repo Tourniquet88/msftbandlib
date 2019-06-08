@@ -1,5 +1,6 @@
 using MSFTBandLib.Command;
-using MSFTBandLib.Includes;
+using MSFTBandLib.Metrics;
+using System;
 using System.Threading.Tasks;
 
 namespace MSFTBandLib {
@@ -31,6 +32,10 @@ public interface BandInterface {
 	/// <summary>Get the current device time.</summary>
 	/// <returns>Task<DateTime></returns>
 	Task<DateTime> GetDeviceTime();
+
+	/// <summary>Get last sleep.</summary>
+	/// <returns>Task<Sleep></returns>
+	Task<Sleep> GetLastSleep();
 
 	/// <summary>Get serial number from the Band.</summary>
 	/// <returns>Task<string></returns>
