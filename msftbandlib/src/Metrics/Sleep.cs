@@ -43,6 +43,14 @@ public class Sleep {
 
 
 	/// <summary>
+	/// Create a Sleep instance.
+	/// 
+	/// TODO: May be removed.
+	/// </summary>
+	public Sleep() {}
+
+
+	/// <summary>
 	/// Create a new Sleep instance from a Band last sleep response.
 	/// 
 	/// Does not in any way validate the given response is a valid sleep.
