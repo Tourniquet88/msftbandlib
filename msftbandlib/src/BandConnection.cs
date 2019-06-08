@@ -1,5 +1,5 @@
 using MSFTBandLib.Command;
-using MSFTBandLib.Includes;
+using MSFTBandLib.Exceptions;
 using MSFTBandLib.Libs;
 using System;
 using System.IO;
@@ -10,25 +10,33 @@ namespace MSFTBandLib {
 /// <summary>
 /// Microsoft Band connection class
 /// </summary>
-public class BandConnection<T> : BandInterface where T : class, BandSocket {
+public class BandConnection<T> : BandConnectionInterface, IDisposable 
+where T : class, BandSocketInterface {
 
 	/// <summary>Band instance</summary>
-	private Band Band;
+	protected BandInterface Band;
+
+	/// <summary>Currently connected</summary>
+	public bool Connected { get; protected set; }
+
+	///	<summary>Disposed</summary>
+	public bool Disposed { get; protected set; }
 
 	/// <summary>Band main service socket</summary>
-	private readonly BandSocket Cargo;
+	protected readonly BandSocketInterface Cargo;
 
 	/// <summary>Band push service socket</summary>
-	private readonly BandSocket Push;
+	protected readonly BandSocketInterface Push;
 
 
 	/// <summary>
-	/// Create a new connection to a given Band.
+	/// Create a new connection instance.
 	/// 
 	/// Socket instances are created for Cargo and Push using the 
 	/// given socket type for the connection type, which must 
 	/// implement `BandSocket`.
 	/// </summary>
+	/// <param name="Band">Band to connect to</param>
 	public BandConnection() {
 		this.Cargo = Activator.CreateInstance(
 			typeof(T), new object[]{}
@@ -39,47 +47,102 @@ public class BandConnection<T> : BandInterface where T : class, BandSocket {
 	}
 
 
-	/// <summary>Connect to a Band.</summary>
-	/// <param name="band">Band instance</param>
-	/// <returns>Task</returns>
-	public async Task Connect(Band band) {
-		this.Band = band;
-		await this.Cargo.Connect(this.Band, Band.CARGO);
-		await this.Push.Connect(this.Band, Band.PUSH);
+	/// <summary>
+	/// Create a new connection instance with a given Band.
+	/// </summary>
+	/// <param name="Band">Band to connect to</param>
+	public BandConnection(BandInterface Band) : this() {
+		this.Band = Band;
 	}
 
 
-	/// <summary>Disconnect all open band sockets.</summary>
+	/// <summary>Dispose of the connection.</summary>
+	public void Dispose() {
+		this.Dispose(true);
+		GC.SuppressFinalize(this);
+	}
+
+
+	/// <summary>Dispose of the connection.</summary>
+	/// <param name="disposing">Disposing (not used)</param>
+	protected virtual void Dispose(bool disposing) {
+		if (!this.Disposed) {
+			this.Cargo.Dispose();
+			this.Push.Dispose();
+			this.Disposed = true;
+		}
+	}
+
+
+	/// <summary>
+	/// Connect to the currently active Band instance.
+	/// 
+	/// Throws if already connected.
+	/// </summary>
 	/// <returns>Task</returns>
+	/// <exception cref="BandConnectionConnected"></exception>
+	public async Task Connect() {
+		if (!this.Connected) {
+			this.Connected = true;
+			string mac = this.Band.GetMac();
+			await this.Cargo.Connect(mac, Guid.Parse(Services.CARGO));
+			await this.Push.Connect(mac, Guid.Parse(Services.PUSH));
+		}
+		else throw new BandConnectionConnected();
+	}
+
+
+	/// <summary>
+	/// Connect to a given Band, replacing any existing Band instance.
+	/// 
+	/// Throws if already connected.
+	/// </summary>
+	/// <param name="Band">Band to connect to</param>
+	/// <returns>Task</returns>
+	/// <exception cref="BandConnectionConnected"></exception>
+	public async Task Connect(BandInterface Band) {
+		if (!this.Connected) {
+			this.Band = Band;
+			await this.Connect();
+		}
+		else throw new BandConnectionConnected();
+	}
+
+
+	/// <summary>
+	/// Disconnect all open Band sockets.
+	/// 
+	/// Throws if not connected.
+	/// </summary>
+	/// <returns>Task</returns>
+	/// <exception cref="BandConnectionConnectedNot"></exception>
 	public async Task Disconnect() {
-		await this.Cargo.Disconnect();
-		await this.Push.Disconnect();
-		this.Band = null;
+		if (this.Connected) {
+			await this.Cargo.Disconnect();
+			await this.Push.Disconnect();
+			this.Connected = false;
+		}
+		else throw new BandConnectionConnectedNot();
 	}
 
 
 	/// <summary>
 	/// Send command to the device and get a response.
+	/// 
+	/// Throws if not connected.
 	/// </summary>
 	/// <param name="command">Command</param>
 	/// <param name="args">Arguments to send</param>
 	/// <param name="buffer">Receiving buffer size</param>
 	/// <returns>Task<CommandResponse></returns>
+	/// <exception cref="BandConnectionConnectedNot"></exception>
 	public async Task<CommandResponse> Command(
 		CommandEnum command,
 		byte[] args=null, uint buffer=Network.BUFFER_SIZE) {
 		
+		if (!this.Connected) throw new BandConnectionConnectedNot();
 		CommandPacket packet = new CommandPacket(command, args);
 		return await this.Cargo.Request(packet, buffer);
-	}
-
-
-	/// <summary>
-	/// Get the Band instance.
-	/// </summary>
-	/// <returns>Band</returns>
-	public Band GetBand() {
-		return this.Band;
 	}
 
 }

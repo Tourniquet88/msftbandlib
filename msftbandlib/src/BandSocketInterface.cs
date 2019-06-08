@@ -7,17 +7,22 @@ namespace MSFTBandLib {
 /// <summary>
 /// Band socket interface
 /// </summary>
-public interface BandSocket {
+public interface BandSocketInterface : IDisposable {
 
 	/// <summary>Connect to a Band.</summary>
-	/// <param name="band">Band instance</param>
-	/// <param name="uuid">Rfcomm service UUID</param>
+	/// <param name="mac">Band address</param>
+	/// <param name="uuid">RFCOMM service UUID</param>
 	/// <returns>Task</returns>
-	Task Connect(Band band, Guid uuid);
+	Task Connect(string mac, Guid uuid);
 
 	/// <summary>Close the connection.</summary>
 	/// <returns>Task</returns>
 	Task Disconnect();
+
+	/// <summary>Send a command packet to the device.</summary>
+	/// <param name="packet">Command packet</param>
+	/// <returns>Task</returns>
+	Task Send(CommandPacket packet);
 
 	/// <summary>
 	/// Receive bytes up to a specified buffer size.
@@ -28,14 +33,7 @@ public interface BandSocket {
 	/// </summary>
 	/// <param name="buffer">buffer</param>
 	/// <returns>Task<CommandResponse></returns>
-	/// <exception cref="BandNotConnectedException">No Band.<exception>
 	Task<CommandResponse> Receive(uint buffer);
-
-	/// <summary>Send a command packet to the device.</summary>
-	/// <param name="packet">Command packet</param>
-	/// <returns>Task</returns>
-	/// <exception cref="BandNotConnectedException">No Band.<exception>
-	Task Send(CommandPacket packet);
 
 	/// <summary>
 	/// Send command packet to device and get a response.

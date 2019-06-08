@@ -1,38 +1,40 @@
 using MSFTBandLib.Command;
 using MSFTBandLib.Includes;
-using MSFTBandLib.Libs;
 using System.Threading.Tasks;
 
 namespace MSFTBandLib {
 
-/// <summary>
-/// Microsoft Band connection interface
-/// </summary>
+/// <summary>Band interface</summary>
 public interface BandInterface {
 
-    /// <summary>
-    /// Create a new connection to a given Band.
-    /// </summary>
-    /// <param name="band">Band instance</param>
-    /// <returns>Task</returns>
-    Task Connect(Band band);
+	/// <summary>Get MAC address.</summary>
+	/// <returns>string</returns>
+	string GetMac();
 
-    /// <summary>
-    /// Disconnect from the Band if connected.
-    /// </summary>
-    Task Disconnect();
+	/// <summary>Get Bluetooth name.</summary>
+	/// <returns>string</returns>
+	string GetName();
 
-    /// <summary>
-    /// Send command to the device and get response bytes.
-    /// </summary>
-    /// <param name="command">Command</param>
-    /// <param name="args">Arguments to send</param>
-    /// <param name="buffer">Receiving buffer size</param>
-    /// <returns>Task<CommandResponse></returns>
-    Task<CommandResponse> Command(
-        CommandEnum command,
-        byte[] args=null, uint buffer=Network.BUFFER_SIZE
-    );
+	/// <summary>Connect to the Band.</summary>
+	/// <returns>Task</returns>
+	Task Connect();
+
+	/// <summary>Disconnect from the Band.</summary>
+	/// <returns>Task</returns>
+	Task Disconnect();
+
+	/// <summary>Run a command.</summary>
+	/// <param name="Command">Command to run</param>
+	/// <returns>Task<CommandResponse></returns>
+	Task<CommandResponse> Command(CommandEnum Command);
+
+	/// <summary>Get the current device time.</summary>
+	/// <returns>Task<DateTime></returns>
+	Task<DateTime> GetDeviceTime();
+
+	/// <summary>Get serial number from the Band.</summary>
+	/// <returns>Task<string></returns>
+	Task<string> GetSerialNumber();
 
 }
 

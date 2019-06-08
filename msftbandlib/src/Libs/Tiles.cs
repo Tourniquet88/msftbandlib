@@ -1,8 +1,6 @@
 namespace MSFTBandLib.Libs {
 
-/// <summary>
-/// Tile GUIDs
-/// </summary>
+/// <summary>Tile GUIDs</summary>
 public static class Tiles {
 
 	/// <summary>Action Center</summary>

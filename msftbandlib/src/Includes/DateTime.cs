@@ -1,7 +1,7 @@
-namespace MSFTBandLib.Time {
+namespace MSFTBandLib.Includes {
 
-/// <summary>Time domain object</summary>
-public class TimeDomain {
+/// <summary>Date/time object</summary>
+public class DateTime {
 
 	/// <summary>Year</summary>
 	public ushort Year;
@@ -25,8 +25,7 @@ public class TimeDomain {
 	/// <summary>
 	/// Create a new time domain.
 	/// 
-	/// The `times` array must contain 6 values as
-	/// 	YYYY, MM, DD, HH, MM, SS.
+	/// The `times` array must contain 6 values: YYYY, MM, DD, HH, MM, SS.
 	/// </summary>
 	/// <param name="times">Array of time values</param>
 	/// <returns>public</returns>

@@ -17,7 +17,7 @@ public static class CommandHelper {
 	/// You must specify the facility index and whether it is a TX bit.
 	/// 
 	/// This method uses bitwise operations to convert the facility/index 
-	/// 	integers into a `ushort` which is returned as the command.
+	/// integers into a `ushort` which is returned as the command.
 	/// 
 	/// Reminders:
 	///  - `<<` shifts the left operand's value left by 
@@ -46,10 +46,9 @@ public static class CommandHelper {
 	
 
 	/// <summary>
-	/// Get an array of bytes to use as the default arguments 
-	/// 	for a command when no arguments are given; we have 
-	/// 	to specify the expected data/response size as 
-	/// 	the arguments instead.
+	/// Get an array of bytes to use as the default arguments for a 
+	/// command when no arguments are given; we have to specify the 
+	/// expected data/response size as the arguments instead.
 	/// </summary>
 	/// <param name="command">Command</param>
 	/// <returns>byte[]</returns>

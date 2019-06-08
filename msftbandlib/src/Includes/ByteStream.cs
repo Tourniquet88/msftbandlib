@@ -7,12 +7,12 @@ namespace MSFTBandLib.Includes {
 /// Byte stream class
 /// 
 /// This is a thin wrapper around `MemoryStream`, `BinaryReader` 
-/// 	and `BinaryWriter` to simplify writing/reading byte arrays.
+/// and `BinaryWriter` to simplify writing/reading byte arrays.
 /// </summary>
 public class ByteStream : IDisposable {
 
 	///	<summary>Disposed</summary>
-	public bool disposed { get; protected set; }
+	public bool Disposed { get; protected set; }
 
 	/// <summary>Memory stream</summary>
 	public MemoryStream MemoryStream;
@@ -50,10 +50,12 @@ public class ByteStream : IDisposable {
 	/// <summary>Dispose of the resources.</summary>
 	/// <param name="disposing">Disposing (not used)</param>
 	protected virtual void Dispose(bool disposing) {
-		this.BinaryReader.Dispose();
-		this.BinaryWriter.Dispose();
-		this.MemoryStream.Dispose();
-		this.disposed = true;
+		if (!this.Disposed) {
+			this.BinaryReader.Dispose();
+			this.BinaryWriter.Dispose();
+			this.MemoryStream.Dispose();
+			this.Disposed = true;
+		}
 	}
 
 
@@ -73,16 +75,15 @@ public class ByteStream : IDisposable {
 
 
 	/// <summary>
-	/// Read a string from the stream as characters from a 
-	/// 	given position in the stream (position is set 
-	/// 	and will not be restored).
+	/// Read a string from the stream as characters from a given 
+	/// position in the stream (position is set and will not be restored).
 	/// 	
 	/// Note: Implemented with `BinaryReader.ReadChars`, instead 
-	/// 	of `BinaryReader.ReadString`, because the latter 
-	/// 	expects strings to be prepended with their length.
+	/// of `BinaryReader.ReadString`, because the latter expects 
+	/// strings to be prepended with their length.
 	/// 
 	/// This implementation works with any string-like data and 
-	/// 	enables consumer to specify how many characters to get.
+	/// enables the consumer to specify how many characters to get.
 	/// </summary>
 	/// <param name="position">Position to read from</param>
 	/// <param name="chars">Characters to read (0: all)</param>
@@ -96,9 +97,8 @@ public class ByteStream : IDisposable {
 
 	/// <summary>
 	/// Read a 2-byte unsigned integer from the stream using 
-	/// 	the `BinaryReader`. Sets stream to given position, 
-	/// 	and advances stream position by 2 once done. Uses 
-	/// 	little-endian encoding.
+	/// the `BinaryReader`. Sets stream to given position, and 
+	/// advances stream position by 2 once done. Little-endian encoding.
 	/// </summary>
 	/// <param name="position">Position to read from</position>
 	/// <returns>ushort</returns>
@@ -110,9 +110,9 @@ public class ByteStream : IDisposable {
 
 	/// <summary>
 	/// Get an array of `ushort` from the stream using 
-	/// 	the `BinaryReader`, reading sequentially from 
-	/// 	the given start position. Does not verify 
-	/// 	the specified number of `ushort` is available.
+	/// the `BinaryReader`, reading sequentially from the 
+	/// given start position. Does not verify the specified 
+	/// number of `ushort` is available.
 	/// </summary>
 	/// <param name="count">Number of `ushort` to read</param>
 	/// <param name="pos">Position to read from</param>

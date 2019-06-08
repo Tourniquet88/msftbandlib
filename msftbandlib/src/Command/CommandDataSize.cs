@@ -6,7 +6,7 @@ namespace MSFTBandLib.Command {
 public class CommandDataSize : Attribute {
 
 	/// <summary>Assigned data size</summary>
-	public int DataSize { get; private set; }
+	public int DataSize { get; protected set; }
 
 
 	/// <summary>Command data size constructor.</summary>

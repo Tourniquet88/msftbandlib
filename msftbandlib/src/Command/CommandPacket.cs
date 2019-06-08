@@ -55,8 +55,8 @@ public class CommandPacket {
 
 
 	/// <summary>
-	/// Get the array of bytes to use as the default arguments 
-	/// 	for the command when no arguments are given.
+	/// Get the array of bytes to use as the default arguments for 
+	/// the command when no arguments are given.
 	/// </summary>
 	/// <param name="command">Command</param>
 	/// <returns>byte[]</returns>

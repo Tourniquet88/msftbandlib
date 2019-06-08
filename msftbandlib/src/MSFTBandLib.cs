@@ -1,11 +1,10 @@
 ﻿namespace MSFTBandLib {
 
-/// <summary>
-/// MSFTBandLib
-/// </summary>
-public class MSFTBandLib {
+/// <summary>MSFTBandLib</summary>
+public static class MSFTBandLib {
 
-	// TODO!
+	/// <summary>MSFTBandLib</summary>
+	public const string MSFTBANDLIB = "0.1.0";
 
 }
 
